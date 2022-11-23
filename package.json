@@ -1,0 +1,72 @@
+{
+  "name": "@sandtreader/rafiki",
+  "author": "Paul Clark <paul@sandtreader.com>",
+  "description": "Rafiki React Administration Framework",
+  "license": "MIT",
+  "version": "0.1.3",
+  "type": "module",
+  "source": "src/index.tsx",
+  "exports": {
+    "require": "./dist/rafiki.cjs",
+    "default": "./dist/rafiki.modern.js"
+  },
+  "main": "./dist/rafiki.umd.js",
+  "module": "./dist/rafiki.module.js",
+  "umpkg": "./dist/rafiki.umd.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist/*.js*",
+    "dist/*.ts",
+    "dist/lib/*.ts"
+  ],
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "lint": "prettier src -c",
+    "format": "prettier src --write",
+    "eject": "react-scripts eject",
+    "build:lib": "rm -r dist; microbundle --jsx React.createElement --jsxFragment React.Fragment --jsxImportSource react",
+    "watch:lib": "microbundle --jsx React.createElement --jsxFragment React.Fragment --jsxImportSource react watch",
+    "publish:lib": "npm run build:lib && npm publish --access public"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "prettier": {
+    "singleQuote": true
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^5.16.5",
+    "@testing-library/react": "^13.4.0",
+    "@testing-library/user-event": "^13.5.0",
+    "@types/jest": "^27.5.2",
+    "@types/node": "^16.18.3",
+    "@types/react": "^18.0.25",
+    "@types/react-dom": "^18.0.9",
+    "microbundle": "^0.15.1",
+    "prettier": "^2.8.0",
+    "react-scripts": "5.0.1",
+    "typescript": "^4.9.3",
+    "web-vitals": "^2.1.4"
+  }
+}
