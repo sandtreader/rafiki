@@ -1,3 +1,4 @@
+// Root file for the example app
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './example/App';
@@ -11,5 +12,4 @@ root.render(
   </React.StrictMode>
 );
 
-// Exports for the library start here too
-export { Menu } from './lib/Menu';
+

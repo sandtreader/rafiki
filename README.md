@@ -1,6 +1,6 @@
 # Rafiki React Administration Framework
 
-A lightweight framework for reacting administration / management portals in React.
+A lightweight framework for creating administration / management portals in React.
 
 Including
 

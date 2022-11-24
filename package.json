@@ -3,23 +3,26 @@
   "author": "Paul Clark <paul@sandtreader.com>",
   "description": "Rafiki React Administration Framework",
   "license": "MIT",
-  "version": "0.1.3",
+  "version": "0.1.5",
   "type": "module",
-  "source": "src/index.tsx",
+  "source": "src/rafiki.ts",
   "exports": {
     "require": "./dist/rafiki.cjs",
     "default": "./dist/rafiki.modern.js"
   },
-  "main": "./dist/rafiki.umd.js",
+  "main": "./dist/rafiki.cjs",
   "module": "./dist/rafiki.module.js",
   "umpkg": "./dist/rafiki.umd.js",
-  "types": "dist/index.d.ts",
+  "types": "dist/rafiki.d.ts",
   "files": [
-    "dist/*.js*",
-    "dist/*.ts",
+    "dist/rafiki.*",
     "dist/lib/*.ts"
   ],
   "dependencies": {
+    "@emotion/react": "^11.10.5",
+    "@emotion/styled": "^11.10.5",
+    "@mui/icons-material": "^5.10.15",
+    "@mui/material": "^5.10.15",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
