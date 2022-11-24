@@ -5,23 +5,20 @@ import MenuStructure from './MenuStructure';
 import MenuProvider from './MenuProvider';
 
 /** Menu provider interface */
-export default class StaticMenuProvider implements MenuProvider
-{
-    /** Static menu structure */
-    public readonly model: MenuStructure;
+export default class StaticMenuProvider implements MenuProvider {
+  /** Static menu structure */
+  public readonly model: MenuStructure;
 
-    /** Constructor
-     * 
-     * @param model - Model object
-     */
-    constructor(model: MenuStructure)
-    {
-        this.model = model;
-    }
+  /** Constructor
+   *
+   * @param model - Model object
+   */
+  constructor(model: MenuStructure) {
+    this.model = model;
+  }
 
-    /** Get a menu structure */
-    getMenu(): MenuStructure
-    {
-        return this.model;
-    }
+  /** Get a menu structure */
+  getMenu(): MenuStructure {
+    return this.model;
+  }
 }

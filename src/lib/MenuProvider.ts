@@ -4,8 +4,7 @@
 import MenuStructure from './MenuStructure';
 
 /** Menu provider interface */
-export default interface MenuProvider
-{
-    /** Get a menu structure */
-    getMenu(): MenuStructure;
+export default interface MenuProvider {
+  /** Get a menu structure */
+  getMenu(): MenuStructure;
 }
