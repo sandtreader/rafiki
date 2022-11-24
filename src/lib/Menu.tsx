@@ -1,3 +1,5 @@
-export const Menu = () => {
+const Menu = () => {
   return <h1>This is a menu</h1>;
 };
+
+export default Menu;
