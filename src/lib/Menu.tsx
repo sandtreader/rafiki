@@ -10,13 +10,9 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import Collapse from '@mui/material/Collapse';
-
-import MailIcon from '@mui/icons-material/Mail';
-import ExpandLessIcon from '@mui/icons-material/ExpandLess';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import Icon from '@mui/material/Icon';
 
 import MenuStructure from './MenuStructure';
-import { isNullOrUndefined } from 'util';
 
 interface MenuProps {
   structure: MenuStructure;
@@ -50,7 +46,7 @@ const Menu: React.FunctionComponent<MenuProps> = ({ structure }) => {
     parentId: string = ''
   ) => {
     return (
-      <List component="div">
+      <List disablePadding>
         {structure.children &&
           structure.children.map((item, index) => {
             const childId = `${parentId}${depth ? '.' : ''}${item.id}`;
@@ -59,18 +55,21 @@ const Menu: React.FunctionComponent<MenuProps> = ({ structure }) => {
 
             return (
               <React.Fragment key={index}>
-                <ListItem role="menuitem" data-testid={`menuitem.${childId}`}>
+                <ListItem disablePadding={depth>0} role="menuitem" data-testid={`menuitem.${childId}`}>
                   <ListItemButton
                     sx={{ pl: depth * 4 }}
                     title={childId} // todo: temp for testing
                     onClick={hasChildren ? toggleLevelFn(childId) : undefined}
                   >
-                    <ListItemIcon>
-                      <MailIcon />
-                    </ListItemIcon>
+                    {
+                      item.icon &&
+                      <ListItemIcon>
+                        <Icon>{item.icon}</Icon>
+                      </ListItemIcon>
+                    }
                     <ListItemText>{item.name}</ListItemText>
                     {hasChildren &&
-                      (open ? <ExpandLessIcon /> : <ExpandMoreIcon />)}
+                      <Icon>{open ? 'expand_less' : 'expand_more'}</Icon>}
                   </ListItemButton>
                 </ListItem>
                 <Collapse in={open}>

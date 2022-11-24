@@ -11,8 +11,11 @@ export default class MenuStructure {
   /** User-visible name */
   public readonly name: string;
 
+  /** Icon name (from Material font, snake_case) */
+  public icon?: string;
+
   /** Children items */
-  public readonly children?: Array<MenuStructure>;
+  public children?: Array<MenuStructure>;
 
   /** Constructor */
   constructor(id: string, name: string) {
