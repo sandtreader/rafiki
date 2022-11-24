@@ -28,7 +28,19 @@ const Menu: React.FunctionComponent<MenuProps> = ({ structure }) => {
 
   // Higher-order function to toggle open state for a given item ID
   const toggleLevelFn = (id: string) => (e: React.MouseEvent) => {
-    setOpened((opened) => ({ ...opened, [id]: !opened || !opened[id] }));
+    setOpened((opened) => {
+      const newOpened = { ...opened };
+
+      // Change the one requested
+      newOpened[id] = !newOpened[id];
+
+      // If it's now closed, close any descendants too
+      if (!newOpened[id])
+        for (let oid in newOpened)
+          if (oid.startsWith(id)) newOpened[oid] = false;
+
+      return newOpened;
+    });
   };
 
   // Recursive list generator
@@ -47,7 +59,7 @@ const Menu: React.FunctionComponent<MenuProps> = ({ structure }) => {
 
             return (
               <React.Fragment key={index}>
-                <ListItem>
+                <ListItem role="menuitem" data-testid={`menuitem.${childId}`}>
                   <ListItemButton
                     sx={{ pl: depth * 4 }}
                     title={childId} // todo: temp for testing
@@ -71,7 +83,11 @@ const Menu: React.FunctionComponent<MenuProps> = ({ structure }) => {
     );
   };
 
-  return <Drawer open={true}>{generateChildren(structure)}</Drawer>;
+  return (
+    <Drawer open={true} role="menu" id="menu">
+      {generateChildren(structure)}
+    </Drawer>
+  );
 };
 
 export default Menu;
