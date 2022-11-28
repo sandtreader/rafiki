@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Dispatch, SetStateAction } from 'react';
 import { render, cleanup, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom';
@@ -6,13 +6,16 @@ import '@testing-library/jest-dom';
 import Menu from '../lib/Menu';
 import exampleMenu from '../test/ExampleMenuStructure';
 import StaticMenuProvider from '../lib/StaticMenuProvider';
+import MenuState from '../lib/MenuState';
 
 afterEach(() => cleanup());
 
 test('it renders the example menu initially folded', () => {
   const provider = new StaticMenuProvider(exampleMenu);
   const structure = provider.getMenu();
-  render(<Menu structure={structure} />);
+  let state: MenuState = {};
+  const setState: Dispatch<SetStateAction<MenuState>> = () => {};
+  render(<Menu structure={structure} state={state} setState={setState}/>);
 
   expect(screen.getByRole('menu')).toBeInTheDocument();
   expect(screen.getAllByRole('menuitem')).toHaveLength(2); // until unfolded
@@ -36,7 +39,9 @@ test('it renders the example menu initially folded', () => {
 test('it unfolds the example menu', async () => {
   const provider = new StaticMenuProvider(exampleMenu);
   const structure = provider.getMenu();
-  render(<Menu structure={structure} />);
+  let state: MenuState = {};
+  const setState: Dispatch<SetStateAction<MenuState>> = () => {};
+  render(<Menu structure={structure} state={state} setState={setState}/>);
 
   expect(screen.getByRole('menu')).toBeInTheDocument();
 

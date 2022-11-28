@@ -17,6 +17,9 @@ export default class MenuStructure {
   /** Children items */
   public children?: Array<MenuStructure>;
 
+  /** Static content or factory function generating content */
+  public content?: JSX.Element | ((item: MenuStructure) => JSX.Element);
+
   /** Constructor */
   constructor(id: string, name: string) {
     this.id = id;
