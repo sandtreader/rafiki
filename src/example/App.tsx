@@ -13,9 +13,7 @@ function App() {
   return (
     <div className="App">
       <Menu structure={structure} state={state} setState={setState} />
-      <Container>
-        {state.content}
-      </Container>
+      <Container>{state.content}</Container>
     </div>
   );
 }

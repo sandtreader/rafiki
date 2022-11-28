@@ -22,30 +22,42 @@ type MenuProps = {
 };
 
 /** React folding menu component */
-const Menu: React.FunctionComponent<MenuProps> = ({ structure, state, setState }) => {
+const Menu: React.FunctionComponent<MenuProps> = ({
+  structure,
+  state,
+  setState,
+}) => {
   const [opened, setOpened] = useState<{ [id: string]: boolean }>();
 
   // Higher-order function to handle click on a given item ID
-  const clickHandlerFn = (fullId: string, item: MenuStructure) => (e: React.MouseEvent) => {
-    if (!!item.children) {
-      setOpened((opened) => {
-        const newOpened = { ...opened };
+  const clickHandlerFn =
+    (fullId: string, item: MenuStructure) => (e: React.MouseEvent) => {
+      if (!!item.children) {
+        setOpened((opened) => {
+          const newOpened = { ...opened };
 
-        // Change the one requested
-        newOpened[fullId] = !newOpened[fullId];
+          // Change the one requested
+          newOpened[fullId] = !newOpened[fullId];
 
-        // If it's now closed, close any descendants too
-        if (!newOpened[fullId])
-          for (let oid in newOpened)
-            if (oid.startsWith(fullId)) newOpened[oid] = false;
+          // If it's now closed, close any descendants too
+          if (!newOpened[fullId])
+            for (let oid in newOpened)
+              if (oid.startsWith(fullId)) newOpened[oid] = false;
 
-        return newOpened;
-      });
-    }
+          return newOpened;
+        });
+      }
 
-    const content = item.content && (typeof item.content == "function") ? item.content(item) : item.content;
-    setState(state => ({ ...state, selectedItemId: fullId, content: content }));
-  };
+      const content =
+        item.content && typeof item.content == 'function'
+          ? item.content(item)
+          : item.content;
+      setState((state) => ({
+        ...state,
+        selectedItemId: fullId,
+        content: content,
+      }));
+    };
 
   // Recursive list generator
   const generateChildren = (

@@ -5,8 +5,7 @@
 export default interface MenuState {
   /** Current selected item ID */
   selectedItemId?: string;
-  
+
   /** React component to show in content pane */
   content?: JSX.Element;
-};
-
+}
