@@ -45,7 +45,6 @@ const Menu: React.FunctionComponent<MenuProps> = ({ structure, state, setState }
 
     const content = item.content && (typeof item.content == "function") ? item.content(item) : item.content;
     setState(state => ({ ...state, selectedItemId: fullId, content: content }));
-    console.log(`Selected ${fullId}`);
   };
 
   // Recursive list generator
