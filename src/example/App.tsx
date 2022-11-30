@@ -8,6 +8,7 @@ import SessionState from '../lib/SessionState';
 
 import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
+import Drawer from '@mui/material/Drawer';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
@@ -43,15 +44,16 @@ function App() {
 
   return (
     <div className="App">
-      <AppBar position='static'>
+      <AppBar position='fixed' sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
         <Toolbar>
           <Typography variant='h4'>Rafiki Administration Framework Test</Typography>
         </Toolbar>
       </AppBar>
+      <Toolbar />
       {
         // Login screen
         !session?.loggedIn &&
-        <Container maxWidth='sm' sx={{marginTop: 5}}>
+        <Container maxWidth='sm' sx={{ marginTop: 5 }}>
           <form onSubmit={(e) => submitLogin()}>
             <Stack spacing={2}>
               <TextField value={userId} onChange={(e) => setUserId(e.target.value)} label="User name" required />
@@ -69,10 +71,11 @@ function App() {
         session?.loggedIn &&
         <>
           <Stack direction='row'>
-            <Box>
+            <Drawer variant='permanent' sx={{width: 280}}>
+              <Toolbar />
               <Menu structure={menuStructure} state={menuState} setState={setMenuState} />
               <Button variant="contained" onClick={(e) => logOut()}>Log out</Button>
-            </Box>
+            </Drawer>
             <Box>{menuState.content}</Box>
           </Stack>
         </>
