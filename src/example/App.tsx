@@ -7,12 +7,14 @@ import FakeAuthenticationProvider from '../lib/FakeAuthenticationProvider';
 import SessionState from '../lib/SessionState';
 
 import Container from '@mui/material/Container';
-import Drawer from '@mui/material/Drawer';
+import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import Alert from '@mui/material/Alert';
 import Typography from '@mui/material/Typography';
+import AppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
 
 function App() {
   // Authentication provider and state
@@ -41,13 +43,17 @@ function App() {
 
   return (
     <div className="App">
+      <AppBar position='static'>
+        <Toolbar>
+          <Typography variant='h4'>Rafiki Administration Framework Test</Typography>
+        </Toolbar>
+      </AppBar>
       {
         // Login screen
         !session?.loggedIn &&
-        <Container maxWidth='sm'>
+        <Container maxWidth='sm' sx={{marginTop: 5}}>
           <form onSubmit={(e) => submitLogin()}>
             <Stack spacing={2}>
-              <Typography variant='h2'>Rafiki Administration Framework Test</Typography>
               <TextField value={userId} onChange={(e) => setUserId(e.target.value)} label="User name" required />
               <TextField value={password} onChange={(e) => setPassword(e.target.value)}
                 id="password" label="Password" type="Password" required />
@@ -62,14 +68,16 @@ function App() {
         // Menu and content
         session?.loggedIn &&
         <>
-          <Drawer variant="permanent" open={true} role="menu" id="menu">
-            <Menu structure={menuStructure} state={menuState} setState={setMenuState} />
-            <Button variant="contained" onClick={(e) => logOut()}>Log out</Button>
-          </Drawer>
-          <Container maxWidth='md'>{menuState.content}</Container>
+          <Stack direction='row'>
+            <Box>
+              <Menu structure={menuStructure} state={menuState} setState={setMenuState} />
+              <Button variant="contained" onClick={(e) => logOut()}>Log out</Button>
+            </Box>
+            <Box>{menuState.content}</Box>
+          </Stack>
         </>
       }
-    </div>
+    </div >
   );
 }
 
