@@ -68,6 +68,7 @@ const Menu: React.FunctionComponent<MenuProps> = ({
       <List disablePadding>
         {structure.children &&
           structure.children.map((item, index) => {
+            if (item.hidden) return null;
             const childId = `${parentId}${depth ? '.' : ''}${item.id}`;
             const open = opened && opened[childId];
             const hasChildren = !!item.children;

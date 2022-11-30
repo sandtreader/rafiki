@@ -55,3 +55,33 @@ test('merging', () => {
   expect(aa.children![1].id).toBe('a.a.b');
   expect(aa.children![2].id).toBe('a.a.c');
 });
+
+test('capability filtering', () => {
+  const ms = new MenuStructure('root', 'ROOT');
+  ms.children = [];
+  const ms_1 = new MenuStructure('test', 'TEST');
+  ms_1.requirements = [ "test" ];
+  ms_1.children = [];
+  const ms_1_1 = new MenuStructure('test1', 'TEST 1');
+  ms_1_1.requirements = [ "test1" ];
+  ms_1.children.push(ms_1_1);
+
+  const ms_1_2 = new MenuStructure('test2', 'TEST 2');
+  ms_1_2.requirements = [ "test2", "magic" ];
+  ms_1.children.push(ms_1_2);
+  ms.children.push(ms_1);
+
+  const ms_2 = new MenuStructure('admin', 'ADMIN')
+  ms_2.requirements = [ "admin" ];
+  ms.children.push(ms_2);
+
+  const capabilities = [ "test.*", "useless" ];
+
+  const msf = ms.filterWithCapabilities(capabilities);
+
+  expect(ms.hidden).toBe(false);
+  expect(ms_1.hidden).toBe(false);
+  expect(ms_1_1.hidden).toBe(false);
+  expect(ms_1_2.hidden).toBe(true);
+  expect(ms_2.hidden).toBe(true);
+});

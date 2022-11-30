@@ -20,6 +20,12 @@ export default class MenuStructure {
   /** Static content or factory function generating content */
   public content?: JSX.Element | ((item: MenuStructure) => JSX.Element);
 
+  /** Capabilities required - if multiple, all must be satified (AND) */
+  public requirements?: Array<string>;
+
+  /** Whether this item is hidden */
+  public hidden: boolean = false;
+
   /** Constructor */
   constructor(id: string, name: string) {
     this.id = id;
@@ -37,6 +43,7 @@ export default class MenuStructure {
         ms.children.push(this.fromLiteral(dataChild));
     }
     ms.content = data.content;
+    ms.requirements = data.requirements;
     return ms;
   }
 
@@ -66,5 +73,38 @@ export default class MenuStructure {
       // If it's new, just add it
       if (!merged) this.children.push(otherChild);
     }
+  }
+
+  /** Filter with a set of capability patterns
+   * Sets the hidden flag if not wanted
+   */
+  filterWithCapabilities(capabilities: Array<string>) {
+    this.hidden = false;
+    // See if we match ourselves
+    if (this.requirements) {
+      for (const requirement of this.requirements) {
+        let found = false;
+        for (const capability of capabilities) {
+          // We test the requirement against the capability pattern
+          const re = new RegExp(capability);
+          if (re.test(requirement)) {
+            found = true;
+            break;
+          }
+        }
+
+        if (!found)
+        {
+          this.hidden = true;
+          return; // Lasy AND
+        }
+      }
+    }
+
+    // Filter any children too
+    if (this.children)
+      this.children.forEach(child => child.filterWithCapabilities(capabilities));
+
+    return true;
   }
 }

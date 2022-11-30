@@ -28,6 +28,7 @@ function App() {
   const menuProvider = new StaticMenuProvider(exampleMenu);
   const menuStructure = menuProvider.getMenu();
   menuStructure.combineWith(additionalMenu);
+  menuStructure.filterWithCapabilities(session?.capabilities || []);
   const [menuState, setMenuState] = useState<MenuState>({});
 
   // Actions
@@ -71,7 +72,7 @@ function App() {
         session?.loggedIn &&
         <>
           <Stack direction='row'>
-            <Drawer variant='permanent' sx={{width: 280}}>
+            <Drawer variant='permanent' sx={{ width: 280 }}>
               <Toolbar />
               <Menu structure={menuStructure} state={menuState} setState={setMenuState} />
               <Button variant="contained" onClick={(e) => logOut()}>Log out</Button>

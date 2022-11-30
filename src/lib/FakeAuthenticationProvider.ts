@@ -15,11 +15,11 @@ export default class FakeAuthenticationProvider implements AuthenticationProvide
 
     if (userId === "admin" && password == "admin") {
       session.userName = "Joe Admin";
-      session.capabilities = ["*"];
+      session.capabilities = [".*"];
     }
     else if (userId === "test" && password == "foo") {
       session.userName = "Test User";
-      session.capabilities = ["test.*"];
+      session.capabilities = ["^test.*"];
     }
     else {
       session.loggedIn = false;
