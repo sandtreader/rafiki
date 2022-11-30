@@ -26,6 +26,20 @@ export default class MenuStructure {
     this.name = name;
   }
 
+  /** Create from object literal without methods */
+  static fromLiteral(data: any): MenuStructure {
+    const ms = new this(data.id, data.name);
+    ms.icon = data.icon;
+    // We have to recurse to convert children into real MenuStructure objects too
+    if (data.children) {
+      ms.children = [];
+      for (const dataChild of data.children)
+        ms.children.push(this.fromLiteral(dataChild));
+    }
+    ms.content = data.content;
+    return ms;
+  }
+
   /** Merge with another menu structure. */
   // Trees are recursively combined by ID, modifying this one
   // Other entries' names & icons are ignored when merging (ours takes priority)

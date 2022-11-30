@@ -1,6 +1,6 @@
 import MenuStructure from '../lib/MenuStructure';
 
-const exampleMenu: MenuStructure = {
+const exampleMenu = MenuStructure.fromLiteral({
   id: '',
   name: '',
   children: [
@@ -14,20 +14,20 @@ const exampleMenu: MenuStructure = {
           id: 'child',
           name: 'CHILD',
           icon: 'emoji_people',
-          content: (item) => <h2>This is the child</h2>, // Functional content
+          content: (item: MenuStructure) => <h2>This is the child</h2>, // Functional content
 
           children: [
             {
               id: 'grandchild1',
               name: 'GRANDCHILD 1',
               icon: 'man',
-              content: (item) => <h3>This is {item.name}</h3>, // Function using item
+              content: (item: MenuStructure) => <h3>This is {item.name}</h3>, // Function using item
             },
             {
               id: 'grandchild2',
               name: 'GRANDCHILD 2',
               icon: 'woman',
-              content: (item) => <h3>This is {item.name}</h3>,
+              content: (item: MenuStructure) => <h3>This is {item.name}</h3>,
             },
           ],
         },
@@ -39,6 +39,38 @@ const exampleMenu: MenuStructure = {
       // Note no content
     },
   ],
-};
+});
 
 export default exampleMenu;
+
+export const additionalMenu = MenuStructure.fromLiteral({
+  id: '',
+  name: '',
+  children: [
+    {
+      id: 'foo',
+      name: 'FOO',
+      children: [
+        {
+          id: 'child',
+          name: 'CHILD',
+
+          children: [
+            {
+              id: 'grandchild3',
+              name: 'GRANDCHILD 3',
+              icon: 'man',
+              content: (item: MenuStructure) => <h3>This is {item.name}</h3>, // Function using item
+            },
+          ],
+        },
+      ],
+    },
+    {
+      id: 'splat',
+      name: 'SPLAT',
+      content: <h2>This is splat</h2>
+    },
+  ],
+ });
+
