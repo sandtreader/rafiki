@@ -25,4 +25,32 @@ export default class MenuStructure {
     this.id = id;
     this.name = name;
   }
+
+  /** Merge with another menu structure. */
+  // Trees are recursively combined by ID, modifying this one
+  // Other entries' names & icons are ignored when merging (ours takes priority)
+  // New items are just references to the 'other' structure
+  combineWith(other: MenuStructure) {
+    // Scan all their children to see if we already have it
+    if (!other.children) return;
+    for (const otherChild of other.children) {
+      let merged = false;
+
+      // Force this.children to exist
+      if (!this.children) this.children = [];
+
+      // See if we already have it
+      for (const ourChild of this.children) {
+        if (ourChild.id === otherChild.id) {
+          // Recurse to merge
+          ourChild.combineWith(otherChild);
+          merged = true;
+          break;
+        }
+      }
+
+      // If it's new, just add it
+      if (!merged) this.children.push(otherChild);
+    }
+  }
 }
