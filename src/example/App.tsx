@@ -1,8 +1,10 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Menu from '../lib/Menu';
 import StaticMenuProvider from '../lib/StaticMenuProvider';
 import exampleMenu, { additionalMenu } from '../test/ExampleMenuStructure';
 import MenuState from '../lib/MenuState';
+import MenuStructure from '../lib/MenuStructure';
+import AuthenticationProvider from '../lib/AuthenticationProvider';
 import FakeAuthenticationProvider from '../lib/FakeAuthenticationProvider';
 import SessionState from '../lib/SessionState';
 
@@ -19,26 +21,48 @@ import Toolbar from '@mui/material/Toolbar';
 
 function App() {
   // Authentication provider and state
-  const authProvider = new FakeAuthenticationProvider;
+  const [authProvider, setAuthProvider] = useState<AuthenticationProvider>();
   const [session, setSession] = useState<SessionState>();
   const [userId, setUserId] = useState("");
   const [password, setPassword] = useState("");
 
-  // Menu provider and state
-  const menuProvider = new StaticMenuProvider(exampleMenu);
-  const menuStructure = menuProvider.getMenu();
-  menuStructure.combineWith(additionalMenu);
-  menuStructure.filterWithCapabilities(session?.capabilities || []);
+  // Init only - create auth provider
+  useEffect(() => {
+    console.log("Create auth provider");
+    setAuthProvider(new FakeAuthenticationProvider());
+  }, []);
+
+  // Menu structure and state
+  const [menu, setMenu] = useState<MenuStructure>();
   const [menuState, setMenuState] = useState<MenuState>({});
+
+  // Init only - load full menu structure
+  useEffect(() => {
+    console.log("Create menu");
+    const menuProvider = new StaticMenuProvider(exampleMenu);
+    const menu = menuProvider.getMenu();
+    menu.combineWith(additionalMenu);
+    setMenu(menu);
+  }, []);
+
+  // On session change, refilter capabilities
+  useEffect(() => {
+    setMenu(m => {
+      console.log("Filter menu");
+      const newMenu = MenuStructure.fromLiteral(m);
+      newMenu.filterWithCapabilities(session?.capabilities || []);
+      return newMenu;
+    })
+  }, [session?.capabilities]);
 
   // Actions
   const submitLogin = () => {
     console.log(`Logging in ${userId} with ${password}`);
-    setSession(authProvider.login(userId, password));
+    setSession(authProvider?.login(userId, password));
   }
 
   const logOut = () => {
-    session && authProvider.logout(session);
+    session && authProvider?.logout(session);
     setSession({ loggedIn: false });
     setPassword('');
   }
@@ -69,12 +93,12 @@ function App() {
 
       {
         // Menu and content
-        session?.loggedIn &&
+        session?.loggedIn && menu &&
         <>
           <Stack direction='row'>
             <Drawer variant='permanent' sx={{ width: 280 }}>
               <Toolbar />
-              <Menu structure={menuStructure} state={menuState} setState={setMenuState} />
+              <Menu structure={menu} state={menuState} setState={setMenuState} />
               <Button variant="contained" onClick={(e) => logOut()}>Log out</Button>
             </Drawer>
             <Box>{menuState.content}</Box>
