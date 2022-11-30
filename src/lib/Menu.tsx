@@ -3,7 +3,6 @@
 
 import React, { useState, Dispatch, SetStateAction } from 'react';
 
-import Drawer from '@mui/material/Drawer';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
@@ -108,11 +107,7 @@ const Menu: React.FunctionComponent<MenuProps> = ({
     );
   };
 
-  return (
-    <Drawer variant="permanent" open={true} role="menu" id="menu">
-      {generateChildren(structure)}
-    </Drawer>
-  );
+  return generateChildren(structure);
 };
 
 export default Menu;

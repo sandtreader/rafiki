@@ -25,7 +25,6 @@ test('it renders the example menu initially folded', () => {
   });
   render(<Menu structure={structure} state={state} setState={mockSetState} />);
 
-  expect(screen.getByRole('menu')).toBeInTheDocument();
   expect(screen.getAllByRole('menuitem')).toHaveLength(2); // until unfolded
 
   // Top levels are visible
@@ -57,8 +56,6 @@ test('it unfolds the example menu', async () => {
   const { rerender } = render(
     <Menu structure={structure} state={state} setState={mockSetState} />
   );
-
-  expect(screen.getByRole('menu')).toBeInTheDocument();
 
   // Click on FOO to unfold
   await userEvent.click(screen.getByText('FOO'));
