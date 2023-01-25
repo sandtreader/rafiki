@@ -4,20 +4,22 @@
 import AuthenticationProvider from './AuthenticationProvider';
 import SessionState from './SessionState';
 
-/** Menu provider interface */
-export default class FakeAuthenticationProvider implements AuthenticationProvider {
+/** Fake Authentication provider */
+export default class FakeAuthenticationProvider
+implements AuthenticationProvider {
   /** Try to log in
    * @returns Session state if successful, error string if not
    */
-  login(userId: string, password: string): SessionState {
+  async login(userId: string, password: string): Promise<SessionState> {
     // Optimistic
     const session: SessionState = { loggedIn: true, userId: userId };
 
-    if (userId === "admin" && password == "admin") {
+    // POST to URL
+    if (userId === "admin" && password === "admin") {
       session.userName = "Joe Admin";
       session.capabilities = [".*"];
     }
-    else if (userId === "test" && password == "foo") {
+    else if (userId === "test" && password === "foo") {
       session.userName = "Test User";
       session.capabilities = ["^test.*"];
     }
@@ -29,7 +31,7 @@ export default class FakeAuthenticationProvider implements AuthenticationProvide
   }
 
   /** Log out */
-  logout(session: SessionState) {
+  async logout(session: SessionState) {
     console.log("Logged out");
     session.loggedIn = false;
   }

@@ -6,6 +6,7 @@ import MenuState from '../lib/MenuState';
 import MenuStructure from '../lib/MenuStructure';
 import AuthenticationProvider from '../lib/AuthenticationProvider';
 import FakeAuthenticationProvider from '../lib/FakeAuthenticationProvider';
+import JWTAuthenticationProvider from '../lib/JWTAuthenticationProvider';
 import SessionState from '../lib/SessionState';
 
 import Container from '@mui/material/Container';
@@ -29,7 +30,8 @@ function App() {
   // Init only - create auth provider
   useEffect(() => {
     console.log("Create auth provider");
-    setAuthProvider(new FakeAuthenticationProvider());
+//    setAuthProvider(new FakeAuthenticationProvider());
+    setAuthProvider(new JWTAuthenticationProvider("http://localhost:7081/login"));
   }, []);
 
   // Menu structure and state
@@ -56,22 +58,25 @@ function App() {
   }, [session?.capabilities]);
 
   // Actions
-  const submitLogin = () => {
+  const submitLogin = async () => {
     console.log(`Logging in ${userId} with ${password}`);
-    setSession(authProvider?.login(userId, password));
+    setSession(await authProvider?.login(userId, password));
   }
 
-  const logOut = () => {
-    session && authProvider?.logout(session);
+  const logOut = async () => {
+    session && await authProvider?.logout(session);
     setSession({ loggedIn: false });
     setPassword('');
   }
 
   return (
     <div className="App">
-      <AppBar position='fixed' sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
+      <AppBar position='fixed'
+              sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
         <Toolbar>
-          <Typography variant='h4'>Rafiki Administration Framework Test</Typography>
+          <Typography variant='h4'>
+            Rafiki Administration Framework Test
+          </Typography>
         </Toolbar>
       </AppBar>
       <Toolbar />
@@ -79,11 +84,15 @@ function App() {
         // Login screen
         !session?.loggedIn &&
         <Container maxWidth='sm' sx={{ marginTop: 5 }}>
-          <form onSubmit={(e) => submitLogin()}>
+          <form onSubmit={(e) => { submitLogin(); e.preventDefault(); }}>
             <Stack spacing={2}>
-              <TextField value={userId} onChange={(e) => setUserId(e.target.value)} label="User name" required />
-              <TextField value={password} onChange={(e) => setPassword(e.target.value)}
-                id="password" label="Password" type="Password" required />
+              <TextField value={userId}
+                         onChange={(e) => setUserId(e.target.value)}
+                         label="User name" required />
+              <TextField value={password}
+                         onChange={(e) => setPassword(e.target.value)}
+                         id="password" label="Password"
+                         type="Password" required />
               <Button type="submit" variant="contained">Log in</Button>
               {session?.error && <Alert severity='error'>{session.error}</Alert>}
             </Stack>
@@ -98,8 +107,10 @@ function App() {
           <Stack direction='row'>
             <Drawer variant='permanent' sx={{ width: 280 }}>
               <Toolbar />
-              <Menu structure={menu} state={menuState} setState={setMenuState} />
-              <Button variant="contained" onClick={(e) => logOut()}>Log out</Button>
+              <Menu structure={menu} state={menuState}
+                    setState={setMenuState} />
+              <Button variant="contained"
+                      onClick={(e) => logOut()}>Log out</Button>
             </Drawer>
             <Box>{menuState.content}</Box>
           </Stack>

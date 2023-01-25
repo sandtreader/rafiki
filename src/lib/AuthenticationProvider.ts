@@ -8,8 +8,8 @@ export default interface AuthenticationProvider {
   /** Try to log in
    * @returns Session state
    */
-  login(userId: string, password: string): SessionState;
+  login(userId: string, password: string): Promise<SessionState>;
 
   /** Log out */
-  logout(session: SessionState): void;
+  logout(session: SessionState): Promise<void>;
 }

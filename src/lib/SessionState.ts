@@ -15,6 +15,9 @@ export default interface SessionState {
   /** List of capability patterns */
   capabilities?: Array<string>;
 
+  /** JWT to quote back in API calls */
+  jwt?: string;
+
   /** Error if login failed */
   error?: string;
 }
