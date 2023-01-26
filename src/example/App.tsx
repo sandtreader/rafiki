@@ -15,7 +15,8 @@ menuProvider.add(additionalMenu);
 function App() {
   return (
     <div className="App">
-      <Framework authProvider={authProvider} menuProvider={menuProvider}/>
+      <Framework authProvider={authProvider} menuProvider={menuProvider}
+                 title="Rafiki Administration Framework Test" />
     </div>
   );
 }

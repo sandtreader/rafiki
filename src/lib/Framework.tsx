@@ -19,13 +19,15 @@ import Toolbar from '@mui/material/Toolbar';
 
 type FrameworkProps = {
   authProvider: AuthenticationProvider;
-  menuProvider: MenuProvider;  // !!! List of them, to combine?
+  menuProvider: MenuProvider;
+  title: string;
 };
 
 /** Top-level framework - construct this in your <App/> */
 const Framework: React.FunctionComponent<FrameworkProps> = ({
   authProvider,
-  menuProvider
+  menuProvider,
+  title
 }) => {
   // Session state
   const [session, setSession] = useState<SessionState>();
@@ -70,9 +72,7 @@ const Framework: React.FunctionComponent<FrameworkProps> = ({
       <AppBar position='fixed'
               sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
         <Toolbar>
-          <Typography variant='h4'>
-            Rafiki Administration Framework Test
-          </Typography>
+          <Typography variant='h4'>{ title }</Typography>
         </Toolbar>
       </AppBar>
       <Toolbar />
