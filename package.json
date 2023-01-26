@@ -3,7 +3,7 @@
   "author": "Paul Clark <paul@sandtreader.com>",
   "description": "Rafiki React Administration Framework",
   "license": "MIT",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "type": "module",
   "source": "src/rafiki.ts",
   "exports": {
