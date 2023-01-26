@@ -17,6 +17,14 @@ export default class StaticMenuProvider implements MenuProvider {
     this.model = model;
   }
 
+  /** Merge with another structure
+   *
+   * @param model - Additional structure
+   */
+  add(model: MenuStructure) {
+    this.model.combineWith(model);
+  }
+
   /** Get a menu structure */
   getMenu(): MenuStructure {
     return this.model;

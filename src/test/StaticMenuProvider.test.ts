@@ -1,6 +1,6 @@
 import StaticMenuProvider from '../lib/StaticMenuProvider';
 import MenuStructure from '../lib/MenuStructure';
-import exampleMenu from './ExampleMenuStructure';
+import { exampleMenu } from './ExampleMenuStructure';
 
 test('the model reflects to the result', () => {
   const provider = new StaticMenuProvider(exampleMenu);

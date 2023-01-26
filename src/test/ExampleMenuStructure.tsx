@@ -1,6 +1,6 @@
 import MenuStructure from '../lib/MenuStructure';
 
-const exampleMenu = MenuStructure.fromLiteral({
+export const exampleMenu = MenuStructure.fromLiteral({
   id: '',
   name: '',
   children: [
@@ -43,8 +43,6 @@ const exampleMenu = MenuStructure.fromLiteral({
     },
   ],
 });
-
-export default exampleMenu;
 
 export const additionalMenu = MenuStructure.fromLiteral({
   id: '',

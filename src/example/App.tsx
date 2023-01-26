@@ -1,5 +1,5 @@
 import StaticMenuProvider from '../lib/StaticMenuProvider';
-import exampleMenu from '../test/ExampleMenuStructure';
+import { exampleMenu, additionalMenu } from '../test/ExampleMenuStructure';
 import JWTAuthenticationProvider from '../lib/JWTAuthenticationProvider';
 import Framework from '../lib/Framework';
 
@@ -9,6 +9,7 @@ const authProvider =
 
 // Menu structure provider
 const menuProvider = new StaticMenuProvider(exampleMenu);
+menuProvider.add(additionalMenu);
 
 // Top-level App
 function App() {

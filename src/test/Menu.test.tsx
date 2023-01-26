@@ -10,7 +10,7 @@ import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom';
 
 import Menu from '../lib/Menu';
-import exampleMenu from '../test/ExampleMenuStructure';
+import { exampleMenu } from '../test/ExampleMenuStructure';
 import StaticMenuProvider from '../lib/StaticMenuProvider';
 import MenuState from '../lib/MenuState';
 
