@@ -2,23 +2,25 @@
   "name": "@sandtreader/rafiki",
   "author": "Paul Clark <paul@sandtreader.com>",
   "description": "Rafiki React Administration Framework",
+  "keywords": ["react", "administration", "portal", "dashboard"],
   "license": "MIT",
-  "version": "0.1.7",
+  "version": "0.1.9g",
   "type": "module",
   "source": "src/rafiki.ts",
+  "main": "dist/rafiki.cjs",
+  "umpkg": "dist/rafiki.umd.js",
+  "module": "dist/rafiki.module.js",
   "exports": {
+    "types": "./dist/rafiki.d.ts",
     "require": "./dist/rafiki.cjs",
     "default": "./dist/rafiki.modern.js"
   },
-  "main": "./dist/rafiki.cjs",
-  "module": "./dist/rafiki.module.js",
-  "umpkg": "./dist/rafiki.umd.js",
   "types": "dist/rafiki.d.ts",
   "files": [
     "dist/rafiki.*",
     "dist/lib/*.ts"
   ],
-  "dependencies": {
+  "peerDependencies": {
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
     "@mui/material": "^5.10.15",
@@ -32,8 +34,8 @@
     "lint": "prettier src -c",
     "format": "prettier src --write",
     "eject": "react-scripts eject",
-    "build:lib": "rm -r dist; microbundle --jsx React.createElement --jsxFragment React.Fragment --jsxImportSource react",
-    "watch:lib": "microbundle --jsx React.createElement --jsxFragment React.Fragment --jsxImportSource react watch",
+    "build:lib": "rm -r dist; microbundle",
+    "watch:lib": "microbundle watch",
     "publish:lib": "npm run build:lib && npm publish --access public"
   },
   "eslintConfig": {
