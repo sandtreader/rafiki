@@ -2,14 +2,8 @@
 // Copyright (c) Paul Clark 2022
 
 import React, { useState, Dispatch, SetStateAction } from 'react';
-
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
-import Collapse from '@mui/material/Collapse';
-import Icon from '@mui/material/Icon';
+import { List, ListItem, ListItemButton, ListItemIcon,
+         ListItemText, Collapse, Icon } from '@mui/material';
 
 import MenuStructure from './MenuStructure';
 import MenuState from '../lib/MenuState';

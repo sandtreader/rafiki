@@ -6,16 +6,9 @@ import MenuStructure from './MenuStructure';
 import AuthenticationProvider from './AuthenticationProvider';
 import SessionState from './SessionState';
 
-import Container from '@mui/material/Container';
-import Box from '@mui/material/Box';
-import Drawer from '@mui/material/Drawer';
-import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
-import Stack from '@mui/material/Stack';
-import Alert from '@mui/material/Alert';
-import Typography from '@mui/material/Typography';
-import AppBar from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
+import { Container, Box, Drawer, TextField, Button,
+         Stack, Alert, Typography,
+         AppBar, Toolbar } from '@mui/material';
 
 type FrameworkProps = {
   authProvider: AuthenticationProvider;

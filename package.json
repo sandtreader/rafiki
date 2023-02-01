@@ -4,7 +4,7 @@
   "description": "Rafiki React Administration Framework",
   "keywords": ["react", "administration", "portal", "dashboard"],
   "license": "MIT",
-  "version": "0.1.9g",
+  "version": "0.1.10",
   "type": "module",
   "source": "src/rafiki.ts",
   "main": "dist/rafiki.cjs",
