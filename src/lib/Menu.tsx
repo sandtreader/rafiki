@@ -66,7 +66,7 @@ const Menu: React.FunctionComponent<MenuProps> = ({
             const childId = `${parentId}${depth ? '.' : ''}${item.id}`;
             const open = opened && opened[childId];
             const hasChildren = !!item.children;
-            const current = childId == state.selectedItemId;
+            const current = childId === state.selectedItemId;
 
             return (
               <React.Fragment key={index}>
