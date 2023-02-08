@@ -95,11 +95,13 @@ const Framework: React.FunctionComponent<FrameworkProps> = ({
         <>
           <Stack direction='row'>
             <Drawer variant='permanent' sx={{ width: 280 }}>
-              <Toolbar />
-              <Menu structure={menu} state={menuState}
-                    setState={setMenuState} />
-              <Button variant="contained"
-                      onClick={(e) => logOut()}>Log out</Button>
+              <Box sx={{width: 280}}>
+                <Toolbar />
+                <Menu structure={menu} state={menuState}
+                      setState={setMenuState} />
+                <Button variant="contained" sx={{ marginLeft: 2, width: 250 }}
+                        onClick={(e) => logOut()}>Log out</Button>
+              </Box>
             </Drawer>
             <Box>{menuState.content}</Box>
           </Stack>
