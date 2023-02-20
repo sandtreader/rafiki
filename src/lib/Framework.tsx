@@ -103,7 +103,7 @@ const Framework: React.FunctionComponent<FrameworkProps> = ({
                         onClick={(e) => logOut()}>Log out</Button>
               </Box>
             </Drawer>
-            <Box>{menuState.content}</Box>
+            <Container maxWidth={false}>{menuState.content}</Container>
           </Stack>
         </>
       }
