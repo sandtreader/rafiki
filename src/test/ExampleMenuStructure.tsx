@@ -1,4 +1,5 @@
 import MenuStructure from '../lib/MenuStructure';
+import TestListView from './TestListView';
 
 export const exampleMenu = MenuStructure.fromLiteral({
   id: '',
@@ -8,7 +9,7 @@ export const exampleMenu = MenuStructure.fromLiteral({
       id: 'foo',
       name: 'FOO',
       icon: 'group',
-      content: <h1>This is a FOO!</h1>, // Static content
+      content: <TestListView/>, // Static content
       children: [
         {
           id: 'child',
@@ -73,4 +74,4 @@ export const additionalMenu = MenuStructure.fromLiteral({
       content: <h2>This is splat</h2>
     },
   ],
- });
+});

@@ -2,9 +2,14 @@
   "name": "@sandtreader/rafiki",
   "author": "Paul Clark <paul@sandtreader.com>",
   "description": "Rafiki React Administration Framework",
-  "keywords": ["react", "administration", "portal", "dashboard"],
+  "keywords": [
+    "react",
+    "administration",
+    "portal",
+    "dashboard"
+  ],
   "license": "MIT",
-  "version": "0.1.10-3",
+  "version": "0.1.11-1",
   "type": "module",
   "source": "src/rafiki.ts",
   "main": "dist/rafiki.cjs",
@@ -24,6 +29,7 @@
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
     "@mui/material": "^5.10.15",
+    "@mui/icons-material": "^5.11.11",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
