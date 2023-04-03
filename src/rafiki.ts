@@ -9,3 +9,5 @@ export { default as JWTAuthenticationProvider } from './lib/JWTAuthenticationPro
 export { default as FakeAuthenticationProvider } from './lib/FakeAuthenticationProvider';
 export type { default as SessionState } from './lib/SessionState';
 export { default as Framework } from './lib/Framework';
+export { default as ListView, type ListViewColumnDefinition } from './lib/ListView';
+export { default as FilteredView } from './lib/FilteredView';

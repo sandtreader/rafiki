@@ -30,17 +30,22 @@ const TestListView: React.FunctionComponent = () => {
     console.log('Delete:', item);
   };
 
+  const handleCreate = () => {
+    console.log('Create');
+  };
+
   return (
     <div>
       <h1>Test Filtered List View</h1>
-      <FilteredView<TestData> items={testData} searchColumns={['name', 'age']}>
+      <FilteredView<TestData> items={testData} searchColumns={['name', 'age']}
+        onCreate={handleCreate}>
         {(filteredItems: TestData[]) => (
           <ListView<TestData>
             items={filteredItems}
             onSelect={handleSelect}
             onDelete={handleDelete}
             columns={columns}
-          />
+            />
         )}
       </FilteredView>
     </div>

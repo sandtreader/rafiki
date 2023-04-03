@@ -2,20 +2,20 @@
 // Copyright (c) Paul Clark 2023
 
 import { useState, ReactNode } from 'react';
-import { Box, TextField, IconButton } from '@mui/material';
-import ClearIcon from '@mui/icons-material/Clear';
+import { Box, TextField, IconButton, Alert, Icon } from '@mui/material';
 import { HasUniqueId } from './Types';
 
 interface FilteredViewProps<T extends HasUniqueId> {
   items: T[];
   children: (filteredItems: T[]) => ReactNode;  // Display function
   searchColumns?: (keyof T)[];  // Properties to search in, or all
+  onCreate?: () => void;        // Optional create function
 }
 
 /** Filtered view - offers a search filter box to filter items displayed
-    by its child */
+   by its child */
 export default function FilteredView<T extends HasUniqueId>(
-  { items, children, searchColumns }: FilteredViewProps<T>)
+  { items, children, searchColumns, onCreate }: FilteredViewProps<T>)
 {
   const [filter, setFilter] = useState('');
 
@@ -62,11 +62,25 @@ export default function FilteredView<T extends HasUniqueId>(
           />
           <IconButton aria-label="clear search" size="large"
                       onClick={() => setFilter('')}>
-            <ClearIcon fontSize="inherit" />
+            <Icon fontSize="inherit">clear</Icon>
           </IconButton>
         </Box>
+
+        <Box>
+          { onCreate &&
+            <IconButton aria-label="create" size="large"
+                        onClick={ onCreate }>
+              <Icon fontSize="inherit">add</Icon>
+            </IconButton>
+          }
+        </Box>
       </Box>
-      {children(filteredItems)}
+
+      { !!filteredItems.length && children(filteredItems) }
+      {
+        !filteredItems.length &&
+        <Alert severity="warning">Nothing found</Alert>
+      }
     </>
   );
 }

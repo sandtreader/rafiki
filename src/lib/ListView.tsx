@@ -3,8 +3,7 @@
 
 import { HasUniqueId } from './Types';
 import { TableContainer, Table, TableBody, TableCell, TableHead, TableRow,
-         IconButton } from '@mui/material';
-import DeleteIcon from '@mui/icons-material/Delete';
+         IconButton, Icon } from '@mui/material';
 
 /** Definition of columns we want to show */
 // - note using keyof to ensure that the keys included really are
@@ -54,7 +53,7 @@ export default function ListView<T extends HasUniqueId>(
                   <IconButton aria-label="delete" size="large"
                               onClick={e => { e.stopPropagation();
                                 onDelete(item); }}>
-                    <DeleteIcon/>
+                    <Icon>delete</Icon>
                   </IconButton>
                 </TableCell>
               </TableRow>
