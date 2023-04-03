@@ -4,6 +4,7 @@
 import { HasUniqueId } from './Types';
 import { TableContainer, Table, TableBody, TableCell, TableHead, TableRow,
          IconButton, Icon } from '@mui/material';
+import { ReactNode } from 'react';
 
 /** Definition of columns we want to show */
 // - note using keyof to ensure that the keys included really are
@@ -11,6 +12,7 @@ import { TableContainer, Table, TableBody, TableCell, TableHead, TableRow,
 export interface ListViewColumnDefinition<T> {
   key: keyof T;
   label: string;
+  render?: (item: T) => ReactNode
 }
 
 /** List view props, parameterised by the type we are displaying */
@@ -35,6 +37,7 @@ export default function ListView<T extends HasUniqueId>(
                 <TableCell key={String(column.key)}>{column.label}</TableCell>
               ))
             }
+            <TableCell key="action">Action</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -45,7 +48,11 @@ export default function ListView<T extends HasUniqueId>(
                 {
                   columns.map((column, i) => (
                     <TableCell key={i}>
-                      {String(item[column.key])}
+                      {column.render?
+                       column.render(item)
+                      :
+                       String(item[column.key])
+                      }
                     </TableCell>
                   ))
                 }

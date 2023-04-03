@@ -17,7 +17,8 @@ const testData: TestData[] = [
 
 const columns: ListViewColumnDefinition<TestData>[] = [
   { key: 'name', label: 'Name' },
-  { key: 'age', label: 'Age' },
+  { key: 'age', label: 'Age',
+    render: (item) => item.age > 30?"Over 30":item.age },
   { key: 'email', label: 'Email' },
 ];
 
