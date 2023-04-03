@@ -1,5 +1,6 @@
 import MenuStructure from '../lib/MenuStructure';
 import TestListView from './TestListView';
+import TestDetailForm from './TestDetailForm';
 
 export const exampleMenu = MenuStructure.fromLiteral({
   id: '',
@@ -15,7 +16,7 @@ export const exampleMenu = MenuStructure.fromLiteral({
           id: 'child',
           name: 'CHILD',
           icon: 'emoji_people',
-          content: (item: MenuStructure) => <h2>This is the child</h2>, // Functional content
+          content: <TestDetailForm/>,
 
           children: [
             {
