@@ -8,10 +8,12 @@ interface TestData {
   name: string;
   age: number;
   email: string;
+  notes?: string;
 }
 
 const testData: TestData =
-  { id: '1', name: 'Alice', age: 30, email: 'alice@example.com' };
+  { id: '1', name: 'Alice', age: 7, email: 'alice@wonderland.com',
+    notes: "Tendency to fantasy involving white rabbits"};
 
 const fields: DetailFormFieldDefinition<TestData>[] = [
   { key: 'name', label: 'Name' },
@@ -20,7 +22,8 @@ const fields: DetailFormFieldDefinition<TestData>[] = [
       <TextField variant="filled" label={field.label} value={value}
                  onChange={e => onChange?onChange(e.target.value):false} />
   },
-  { key: 'email', label: 'Email' }
+  { key: 'email', label: 'Email' },
+  { key: 'notes', label: 'Notes', lines: 10 }
 ];
 
 export interface TestDetailFormProps {

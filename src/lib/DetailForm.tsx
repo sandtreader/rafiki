@@ -21,6 +21,7 @@ export enum DetailFormIntent
 export interface DetailFormFieldDefinition<T> {
   key: keyof T;
   label: string;
+  lines?: number;  // Number of lines to show (default 1)
   render?: (field: DetailFormFieldDefinition<T>,
             value: T[keyof T],
             onChange?: (value: string) => void) => ReactNode;
@@ -112,6 +113,8 @@ export default function DetailForm<T>(
                            onChangeForKey(field.key))
               :
               <TextField label={field.label} value={itemState[field.key]}
+                         multiline={field.lines != undefined && field.lines > 1}
+                         minRows={field.lines}
                          onChange={
                            e => onChangeForKey(field.key)(e.target.value)
                          }/>
