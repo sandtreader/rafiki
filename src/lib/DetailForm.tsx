@@ -25,6 +25,7 @@ export interface DetailFormFieldDefinition<T> {
   render?: (field: DetailFormFieldDefinition<T>,
             value: T[keyof T],
             onChange?: (value: string) => void) => ReactNode;
+  validate?: (value: string) => boolean;
 }
 
 /** Detail form props, parameterised by the type we are displaying */
@@ -73,13 +74,14 @@ export default function DetailForm<T>(
     if (onClose) onClose(true);
   };
 
-  // HOF onchange for a particular item key
-  const onChangeForKey = (key: keyof T) =>
+  // HOF onchange for a particular field
+  const onChangeForField = (field: DetailFormFieldDefinition<T>) =>
     (value: string) => {
-      if (editable) setItemState((prevState: T) => ({
-        ...prevState,
-        [key]: value
-      }));
+      if (editable && (!field.validate || field.validate(value)))
+        setItemState((prevState: T) => ({
+          ...prevState,
+          [field.key]: value
+        }));
     };
 
   return (
@@ -114,13 +116,13 @@ export default function DetailForm<T>(
               field.render
               ?
               field.render(field, itemState[field.key],
-                           onChangeForKey(field.key))
+                           onChangeForField(field))
               :
               <TextField label={field.label} value={itemState[field.key]}
                          multiline={field.lines != undefined && field.lines > 1}
                          minRows={field.lines}
                          onChange={
-                           e => onChangeForKey(field.key)(e.target.value)
+                           e => onChangeForField(field)(e.target.value)
                          }/>
             )
           }

@@ -20,7 +20,8 @@ const fields: DetailFormFieldDefinition<TestData>[] = [
   { key: 'age', label: 'Age',
     render: (field, value, onChange) =>
       <TextField variant="filled" label={field.label} value={value}
-                 onChange={e => onChange?onChange(e.target.value):false} />
+                 onChange={e => onChange?onChange(e.target.value):false} />,
+    validate: (value) => /^([1-9]\d{0,2})?$/.test(value)
   },
   { key: 'email', label: 'Email' },
   { key: 'notes', label: 'Notes', lines: 10 }

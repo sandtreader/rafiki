@@ -52,13 +52,13 @@ export const exampleMenu = MenuStructure.fromLiteral({
         {
           id: 'form1',
           name: 'Detail form',
-          icon: 'emoji_people',
+          icon: 'description',
           content: <TestDetailForm/>,
         },
         {
           id: 'form2',
           name: 'Detail dialog',
-          icon: 'emoji_people',
+          icon: 'article',
           content: <TestDetailForm dialog/>,
         }
       ],
