@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import DetailForm, { DetailFormIntent, DetailFormFieldDefinition }
 from '../lib/DetailForm';
-import { Dialog } from '@mui/material';
+import { Dialog, TextField } from '@mui/material';
 
 interface TestData {
   id: string;
@@ -15,7 +15,11 @@ const testData: TestData =
 
 const fields: DetailFormFieldDefinition<TestData>[] = [
   { key: 'name', label: 'Name' },
-  { key: 'age', label: 'Age' },
+  { key: 'age', label: 'Age',
+    render: (field, value, onChange) =>
+      <TextField variant="filled" label={field.label} value={value}
+                 onChange={e => onChange?onChange(e.target.value):false} />
+  },
   { key: 'email', label: 'Email' }
 ];
 

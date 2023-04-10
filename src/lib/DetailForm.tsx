@@ -21,7 +21,9 @@ export enum DetailFormIntent
 export interface DetailFormFieldDefinition<T> {
   key: keyof T;
   label: string;
-  render?: (item: T) => ReactNode;
+  render?: (field: DetailFormFieldDefinition<T>,
+            value: T[keyof T],
+            onChange?: (value: string) => void) => ReactNode;
 }
 
 /** Detail form props, parameterised by the type we are displaying */
@@ -68,10 +70,10 @@ export default function DetailForm<T>(
 
   // HOF onchange for a particular item key
   const onChangeForKey = (key: keyof T) =>
-    (event: React.ChangeEvent<HTMLInputElement>) => {
+    (value: string) => {
       if (editable) setItemState((prevState: T) => ({
         ...prevState,
-        [key]: event.target.value
+        [key]: value
       }));
     };
 
@@ -104,8 +106,15 @@ export default function DetailForm<T>(
         <Stack direction="column" spacing={2}>
           {
             fields.map( field =>
+              field.render
+              ?
+              field.render(field, itemState[field.key],
+                           onChangeForKey(field.key))
+              :
               <TextField label={field.label} value={itemState[field.key]}
-                         onChange={ onChangeForKey(field.key) }/>
+                         onChange={
+                           e => onChangeForKey(field.key)(e.target.value)
+                         }/>
             )
           }
         </Stack>
