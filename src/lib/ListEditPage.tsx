@@ -1,11 +1,12 @@
 // A page which provides a filtered list view, edit and create forms
 // all generic
 
-import React, { useEffect, useCallback, useState } from 'react';
+import { useEffect, useCallback, useState, ComponentType } from 'react';
 import { HasUniqueId } from './Types';
 import ListView, { ListViewColumnDefinition } from './ListView';
 import FilteredView from './FilteredView';
-import DetailForm, { DetailFormFieldDefinition, DetailFormIntent }
+import DetailForm, { DetailFormFieldDefinition, DetailFormIntent,
+                     DetailFormProps }
   from './DetailForm';
 
 import { TextField, Button,
@@ -21,15 +22,16 @@ export interface ListEditPageProps<T extends HasUniqueId> {
   deleteItem: (item: T) => Promise<void>;
   columns: ListViewColumnDefinition<T>[];
   searchColumns?: (keyof T)[];  // Properties to search in, or all
-  fields: DetailFormFieldDefinition<T>[];
+  fields?: DetailFormFieldDefinition<T>[];
   getTitle?: (item: T) => string;
+  form?: ComponentType<DetailFormProps<T>>  // Optional custom form
 };
 
 /** List edit page - a full management page with a filtered list view,
     detail edit and create forms */
 export default function ListEditPage<T extends HasUniqueId>(
   { typeName, fetchItems, createItem, saveItem, deleteItem, columns,
-    searchColumns, fields, getTitle }:
+    searchColumns, fields, getTitle, form }:
   ListEditPageProps<T>)
 {
   const [items, setItems] = useState<Array<T>>([]);
@@ -77,7 +79,7 @@ export default function ListEditPage<T extends HasUniqueId>(
   };
 
   // Use aliases to avoid JSX/generics car crash
-  const ItemForm = DetailForm<T>;
+  const ItemForm = form?form:DetailForm<T>; // Option for custom type
   const ItemFilteredView = FilteredView<T>;
   const ItemListView = ListView<T>;
 
@@ -102,15 +104,15 @@ export default function ListEditPage<T extends HasUniqueId>(
         <Dialog open={true} onClose={ () => onClose(false) }
                 maxWidth="md" fullWidth={true}>
           <ItemForm
-            intent={creating?DetailFormIntent.Create
+          intent = {creating?DetailFormIntent.Create
                    :DetailFormIntent.ViewWithEdit}
-            item={selectedItem}
-            onDelete={onDelete}
-            onSave={onSave}
-            onClose={onClose}
-            fields={fields}
-            getTitle={getTitle?getTitle:(item => `${typeName} ${item.id}`) }
-          />
+          item = {selectedItem}
+          onDelete = {onDelete}
+          onSave = {onSave}
+          onClose = {onClose}
+          fields = {fields}
+          getTitle = { getTitle?getTitle:(item => `${typeName} ${item.id}`) }
+            />
         </Dialog>
       }
 

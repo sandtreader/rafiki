@@ -35,7 +35,7 @@ export interface DetailFormProps<T> {
   onClose?: (changed: boolean) => void;
   onDelete?: (item: T) => void;
   onSave?: (item: T) => void;
-  fields: DetailFormFieldDefinition<T>[];
+  fields?: DetailFormFieldDefinition<T>[];
   getTitle?: (item: T) => string;
 };
 
@@ -53,7 +53,7 @@ export default function DetailForm<T>(
   const save = async () => {
     // Anything changed?
     let changed = false;
-    for(const field of fields)
+    for(const field of fields || [])
       if (itemState[field.key] != item[field.key])
       {
         changed = true;
@@ -112,7 +112,7 @@ export default function DetailForm<T>(
       <DialogContent>
         <Stack direction="column" spacing={2}>
           {
-            fields.map( field =>
+            fields?.map( field =>
               field.render
               ?
               field.render(field, itemState[field.key],
