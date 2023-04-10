@@ -69,7 +69,7 @@ export default function DetailForm<T>(
   // HOF onchange for a particular item key
   const onChangeForKey = (key: keyof T) =>
     (event: React.ChangeEvent<HTMLInputElement>) => {
-      setItemState((prevState: T) => ({
+      if (editable) setItemState((prevState: T) => ({
         ...prevState,
         [key]: event.target.value
       }));
@@ -100,19 +100,16 @@ export default function DetailForm<T>(
         </Stack>
       </Stack>
 
-      {
-        editable &&
-        <DialogContent>
-          <Stack direction="column" spacing={2}>
-            {
-              fields.map( field =>
-                <TextField label={field.label} value={itemState[field.key]}
-                           onChange={ onChangeForKey(field.key) }/>
-              )
-            }
-          </Stack>
-        </DialogContent>
-      }
+      <DialogContent>
+        <Stack direction="column" spacing={2}>
+          {
+            fields.map( field =>
+              <TextField label={field.label} value={itemState[field.key]}
+                         onChange={ onChangeForKey(field.key) }/>
+            )
+          }
+        </Stack>
+      </DialogContent>
 
       <DialogActions>
         {
