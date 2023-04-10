@@ -12,5 +12,7 @@ export { default as Framework } from './lib/Framework';
 export { type HasUniqueId } from './lib/Types';
 export { default as ListView, type ListViewColumnDefinition } from './lib/ListView';
 export { default as FilteredView } from './lib/FilteredView';
-export { default as DetailForm, DetailFormIntent, type DetailFormFieldDefinition } from './lib/DetailForm';
+export { default as DetailForm, DetailFormIntent,
+         type DetailFormFieldDefinition, type DetailFormProps }
+  from './lib/DetailForm';
 export { default as ListEditPage } from './lib/ListEditPage';
