@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import DetailForm, { DetailFormIntent, DetailFormFieldDefinition }
-  from '../lib/DetailForm';
+from '../lib/DetailForm';
+import { Dialog } from '@mui/material';
 
 interface TestData {
   id: string;
@@ -18,39 +19,51 @@ const fields: DetailFormFieldDefinition<TestData>[] = [
   { key: 'email', label: 'Email' }
 ];
 
-const TestDetailForm: React.FunctionComponent = () => {
-  const [open, setOpen] = useState(true);
-
-  const handleClose = (changed: boolean) => {
-    console.log(`Closing: ${changed?"changed":"unchanged"}`);
-    setOpen(false);
-  };
-
-  const handleDelete = (item: TestData) => {
-    console.log('Delete:', item);
-  };
-
-  const handleSave = (item: TestData) => {
-    console.log('Save:', item);
-  };
-
-  return (
-    <div>
-      <h1>Test Detail Form</h1>
-      {
-        open &&
-        <DetailForm<TestData>
-          intent={DetailFormIntent.ViewWithEdit}
-          item={testData}
-          onClose={handleClose}
-          onDelete={handleDelete}
-          onSave={handleSave}
-          fields={fields}
-          getTitle={ item => `Test: ${item.id} ${item.name}` }
-          />
-      }
-    </div>
-  );
+export interface TestDetailFormProps {
+  dialog?: boolean;
 };
+
+const TestDetailForm: React.FunctionComponent<TestDetailFormProps> =
+  ({ dialog }) => {
+    const [open, setOpen] = useState(true);
+
+    const handleClose = (changed: boolean) => {
+      console.log(`Closing: ${changed?"changed":"unchanged"}`);
+      setOpen(false);
+    };
+
+    const handleDelete = (item: TestData) => {
+      console.log('Delete:', item);
+    };
+
+    const handleSave = (item: TestData) => {
+      console.log('Save:', item);
+    };
+
+    const form = () =>
+      <DetailForm<TestData>
+        intent={DetailFormIntent.ViewWithEdit}
+        item={testData}
+        onClose={dialog?handleClose:undefined}
+        onDelete={handleDelete}
+        onSave={handleSave}
+        fields={fields}
+        getTitle={ item => `Test: ${item.id} ${item.name}` }
+        />;
+
+    return (
+      <div>
+        <h1>Test Detail Form {dialog?"dialog":""}</h1>
+        {
+          dialog?
+          <Dialog open={open} onClose={handleClose}
+                  maxWidth="md" fullWidth={true}>
+            { form() }
+          </Dialog>
+          : form()
+        }
+      </div>
+    );
+  };
 
 export default TestDetailForm;

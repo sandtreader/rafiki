@@ -3,7 +3,7 @@
 import React, { ReactNode, useState } from 'react';
 
 import { Button, TextField, Stack, IconButton, Icon,
-         Dialog, DialogActions, DialogContent, DialogTitle
+         DialogActions, DialogContent, DialogTitle
 } from '@mui/material';
 
 /** Initial intent of the form */
@@ -28,7 +28,7 @@ export interface DetailFormFieldDefinition<T> {
 export interface DetailFormProps<T> {
   intent: DetailFormIntent;
   item: T;
-  onClose: (changed: boolean) => void;
+  onClose?: (changed: boolean) => void;
   onDelete?: (item: T) => void;
   onSave?: (item: T) => void;
   fields: DetailFormFieldDefinition<T>[];
@@ -57,13 +57,13 @@ export default function DetailForm<T>(
       }
 
     if (changed && onSave) onSave(itemState);
-    onClose(changed);
+    if (onClose) onClose(changed);
   };
 
   // Delete the whole item and close
   const deleteItem = async () => {
     if (onDelete) onDelete(item);
-    onClose(true);
+    if (onClose) onClose(true);
   };
 
   // HOF onchange for a particular item key
@@ -76,7 +76,7 @@ export default function DetailForm<T>(
     };
 
   return (
-    <Dialog open={true} onClose={onClose} maxWidth="md" fullWidth={true}>
+    <>
       <Stack direction="row" justifyContent="space-between">
         {
           getTitle &&
@@ -116,7 +116,7 @@ export default function DetailForm<T>(
 
       <DialogActions>
         {
-          editable &&
+          editable && onClose &&
           <Button onClick={ _ => onClose(false) }>Cancel</Button>
         }
         {
@@ -124,10 +124,10 @@ export default function DetailForm<T>(
           <Button onClick={ save }>Save</Button>
         }
         {
-          !editable &&
+          !editable && onClose &&
           <Button onClick={ _ => onClose(false) }>Close</Button>
         }
       </DialogActions>
-    </Dialog>
+    </>
   );
 };

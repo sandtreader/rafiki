@@ -16,7 +16,7 @@ export const exampleMenu = MenuStructure.fromLiteral({
           id: 'child',
           name: 'CHILD',
           icon: 'emoji_people',
-          content: <TestDetailForm/>,
+          content: <h1>This is the child</h1>,
 
           children: [
             {
@@ -42,6 +42,26 @@ export const exampleMenu = MenuStructure.fromLiteral({
       name: 'BAR',
       // Note no content
       requirements: [ "bar.admin" ]
+    },
+    {
+      id: 'forms',
+      name: 'Forms',
+      // Note no content
+      requirements: [ "admin" ],
+      children: [
+        {
+          id: 'form1',
+          name: 'Detail form',
+          icon: 'emoji_people',
+          content: <TestDetailForm/>,
+        },
+        {
+          id: 'form2',
+          name: 'Detail dialog',
+          icon: 'emoji_people',
+          content: <TestDetailForm dialog/>,
+        }
+      ],
     },
   ],
 });
