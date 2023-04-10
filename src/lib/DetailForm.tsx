@@ -63,6 +63,10 @@ export default function DetailForm<T>(
     if (onClose) onClose(changed);
   };
 
+  const reset = () => {
+    setItemState({... item});
+  };
+
   // Delete the whole item and close
   const deleteItem = async () => {
     if (onDelete) onDelete(item);
@@ -127,6 +131,10 @@ export default function DetailForm<T>(
         {
           editable && onClose &&
           <Button onClick={ _ => onClose(false) }>Cancel</Button>
+        }
+        {
+          editable && !onClose &&
+          <Button onClick={ reset }>Reset</Button>
         }
         {
           editable &&
