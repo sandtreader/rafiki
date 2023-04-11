@@ -9,10 +9,9 @@ export { default as JWTAuthenticationProvider } from './lib/JWTAuthenticationPro
 export { default as FakeAuthenticationProvider } from './lib/FakeAuthenticationProvider';
 export type { default as SessionState } from './lib/SessionState';
 export { default as Framework } from './lib/Framework';
-export { type HasUniqueId } from './lib/Types';
+export { type HasUniqueId, FormIntent, type FormProps } from './lib/Types';
 export { default as ListView, type ListViewColumnDefinition } from './lib/ListView';
 export { default as FilteredView } from './lib/FilteredView';
-export { default as DetailForm, DetailFormIntent,
-         type DetailFormFieldDefinition, type DetailFormProps }
-  from './lib/DetailForm';
+export { default as DetailForm, type DetailFormFieldDefinition,
+         type DetailFormProps } from './lib/DetailForm';
 export { default as ListEditPage } from './lib/ListEditPage';

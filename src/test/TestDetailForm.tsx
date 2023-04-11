@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import DetailForm, { DetailFormIntent, DetailFormFieldDefinition }
-from '../lib/DetailForm';
+import DetailForm, { DetailFormFieldDefinition } from '../lib/DetailForm';
+import { FormIntent } from '../lib/Types';
 import { Dialog, TextField } from '@mui/material';
 
 interface TestData {
@@ -50,7 +50,7 @@ const TestDetailForm: React.FunctionComponent<TestDetailFormProps> =
 
     const form = () =>
       <DetailForm<TestData>
-        intent={DetailFormIntent.ViewWithEdit}
+        intent={FormIntent.ViewWithEdit}
         item={testData}
         onClose={dialog?handleClose:undefined}
         onDelete={handleDelete}

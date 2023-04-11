@@ -6,14 +6,7 @@ import { Button, TextField, Stack, IconButton, Icon,
          DialogActions, DialogContent, DialogTitle
 } from '@mui/material';
 
-/** Initial intent of the form */
-export enum DetailFormIntent
-{
-  View,
-  ViewWithEdit,
-  Edit,
-  Create
-};
+import { FormIntent, FormProps } from './Types';
 
 /** Definition of fields we want to show */
 // - note using keyof to ensure that the keys included really are
@@ -29,10 +22,8 @@ export interface DetailFormFieldDefinition<T> {
 }
 
 /** Detail form props, parameterised by the type we are displaying */
-export interface DetailFormProps<T> {
-  intent: DetailFormIntent;
-  item: T;
-  onClose?: (changed: boolean) => void;
+export interface DetailFormProps<T> extends FormProps<T>
+{
   onDelete?: (item: T) => void;
   onSave?: (item: T) => void;
   fields?: DetailFormFieldDefinition<T>[];
@@ -45,8 +36,8 @@ export default function DetailForm<T>(
   DetailFormProps<T>)
 {
   const [editable, setEditable] =
-    useState(intent === DetailFormIntent.Edit
-          || intent === DetailFormIntent.Create);
+    useState(intent === FormIntent.Edit
+          || intent === FormIntent.Create);
   const [itemState, setItemState] = useState<T>({... item});
 
   // Save changes
@@ -93,14 +84,14 @@ export default function DetailForm<T>(
         }
         <Stack direction="row">
           {
-            !editable && intent === DetailFormIntent.ViewWithEdit &&
+            !editable && intent === FormIntent.ViewWithEdit &&
             <IconButton aria-label="edit" size="large"
                         onClick={ _ => setEditable(true) }>
               <Icon>edit</Icon>
             </IconButton>
           }
           {
-            intent !== DetailFormIntent.View && onDelete &&
+            intent !== FormIntent.View && onDelete &&
             <IconButton aria-label="delete" size="large"
                         onClick={ deleteItem }>
               <Icon>delete</Icon>

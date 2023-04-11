@@ -2,12 +2,10 @@
 // all generic
 
 import { useEffect, useCallback, useState, ComponentType } from 'react';
-import { HasUniqueId } from './Types';
+import { HasUniqueId, FormIntent, FormProps } from './Types';
 import ListView, { ListViewColumnDefinition } from './ListView';
 import FilteredView from './FilteredView';
-import DetailForm, { DetailFormFieldDefinition, DetailFormIntent,
-                     DetailFormProps }
-  from './DetailForm';
+import DetailForm, { DetailFormFieldDefinition } from './DetailForm';
 
 import { TextField, Button,
          Dialog, DialogTitle, DialogContent, DialogActions
@@ -24,7 +22,7 @@ export interface ListEditPageProps<T extends HasUniqueId> {
   searchColumns?: (keyof T)[];  // Properties to search in, or all
   fields?: DetailFormFieldDefinition<T>[];
   getTitle?: (item: T) => string;
-  form?: ComponentType<DetailFormProps<T>>  // Optional custom form
+  form?: ComponentType<FormProps<T>>  // Optional custom form
 };
 
 /** List edit page - a full management page with a filtered list view,
@@ -104,8 +102,7 @@ export default function ListEditPage<T extends HasUniqueId>(
         <Dialog open={true} onClose={ () => onClose(false) }
                 maxWidth="md" fullWidth={true}>
           <ItemForm
-          intent = {creating?DetailFormIntent.Create
-                   :DetailFormIntent.ViewWithEdit}
+          intent = {creating?FormIntent.Create:FormIntent.ViewWithEdit}
           item = {selectedItem}
           onDelete = {onDelete}
           onSave = {onSave}
