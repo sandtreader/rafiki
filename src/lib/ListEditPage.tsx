@@ -5,7 +5,7 @@ import { useEffect, useCallback, useState, ComponentType } from 'react';
 import { HasUniqueId, FormIntent, FormProps } from './Types';
 import ListView, { ListViewColumnDefinition } from './ListView';
 import FilteredView from './FilteredView';
-import DetailForm, { DetailFormFieldDefinition } from './DetailForm';
+import BasicForm, { BasicFormFieldDefinition } from './BasicForm';
 
 import { TextField, Button,
          Dialog, DialogTitle, DialogContent, DialogActions
@@ -20,13 +20,13 @@ export interface ListEditPageProps<T extends HasUniqueId> {
   deleteItem: (item: T) => Promise<void>;
   columns: ListViewColumnDefinition<T>[];
   searchColumns?: (keyof T)[];  // Properties to search in, or all
-  fields?: DetailFormFieldDefinition<T>[];
+  fields?: BasicFormFieldDefinition<T>[];
   getTitle?: (item: T) => string;
   form?: ComponentType<FormProps<T>>  // Optional custom form
 };
 
 /** List edit page - a full management page with a filtered list view,
-    detail edit and create forms */
+    edit and create forms */
 export default function ListEditPage<T extends HasUniqueId>(
   { typeName, fetchItems, createItem, saveItem, deleteItem, columns,
     searchColumns, fields, getTitle, form }:
@@ -77,7 +77,7 @@ export default function ListEditPage<T extends HasUniqueId>(
   };
 
   // Use aliases to avoid JSX/generics car crash
-  const ItemForm = form?form:DetailForm<T>; // Option for custom type
+  const ItemForm = form?form:BasicForm<T>; // Option for custom type
   const ItemFilteredView = FilteredView<T>;
   const ItemListView = ListView<T>;
 

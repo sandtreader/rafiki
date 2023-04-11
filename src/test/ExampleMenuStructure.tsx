@@ -1,6 +1,6 @@
 import MenuStructure from '../lib/MenuStructure';
 import TestListView from './TestListView';
-import TestDetailForm from './TestDetailForm';
+import TestBasicForm from './TestBasicForm';
 
 export const exampleMenu = MenuStructure.fromLiteral({
   id: '',
@@ -51,15 +51,15 @@ export const exampleMenu = MenuStructure.fromLiteral({
       children: [
         {
           id: 'form1',
-          name: 'Detail form',
+          name: 'Basic form',
           icon: 'description',
-          content: <TestDetailForm/>,
+          content: <TestBasicForm/>,
         },
         {
           id: 'form2',
-          name: 'Detail dialog',
+          name: 'Basic form dialog',
           icon: 'article',
-          content: <TestDetailForm dialog/>,
+          content: <TestBasicForm dialog/>,
         }
       ],
     },

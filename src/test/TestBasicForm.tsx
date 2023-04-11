@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import DetailForm, { DetailFormFieldDefinition } from '../lib/DetailForm';
+import BasicForm, { BasicFormFieldDefinition } from '../lib/BasicForm';
 import { FormIntent } from '../lib/Types';
 import { Dialog, TextField } from '@mui/material';
 
@@ -15,7 +15,7 @@ const testData: TestData =
   { id: '1', name: 'Alice', age: 7, email: 'alice@wonderland.com',
     notes: "Tendency to fantasy involving white rabbits"};
 
-const fields: DetailFormFieldDefinition<TestData>[] = [
+const fields: BasicFormFieldDefinition<TestData>[] = [
   { key: 'name', label: 'Name' },
   { key: 'age', label: 'Age',
     render: (field, value, onChange) =>
@@ -27,11 +27,11 @@ const fields: DetailFormFieldDefinition<TestData>[] = [
   { key: 'notes', label: 'Notes', lines: 10 }
 ];
 
-export interface TestDetailFormProps {
+export interface TestBasicFormProps {
   dialog?: boolean;
 };
 
-const TestDetailForm: React.FunctionComponent<TestDetailFormProps> =
+const TestBasicForm: React.FunctionComponent<TestBasicFormProps> =
   ({ dialog }) => {
     const [open, setOpen] = useState(true);
 
@@ -49,7 +49,7 @@ const TestDetailForm: React.FunctionComponent<TestDetailFormProps> =
     };
 
     const form = () =>
-      <DetailForm<TestData>
+      <BasicForm<TestData>
         intent={FormIntent.ViewWithEdit}
         item={testData}
         onClose={dialog?handleClose:undefined}
@@ -61,7 +61,7 @@ const TestDetailForm: React.FunctionComponent<TestDetailFormProps> =
 
     return (
       <div>
-        <h1>Test Detail Form {dialog?"dialog":""}</h1>
+        <h1>Test Basic Form {dialog?"dialog":""}</h1>
         {
           dialog?
           <Dialog open={open} onClose={handleClose}
@@ -74,4 +74,4 @@ const TestDetailForm: React.FunctionComponent<TestDetailFormProps> =
     );
   };
 
-export default TestDetailForm;
+export default TestBasicForm;

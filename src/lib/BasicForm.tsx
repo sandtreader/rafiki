@@ -11,29 +11,29 @@ import { FormIntent, FormProps } from './Types';
 /** Definition of fields we want to show */
 // - note using keyof to ensure that the keys included really are
 //   properties of the type
-export interface DetailFormFieldDefinition<T> {
+export interface BasicFormFieldDefinition<T> {
   key: keyof T;
   label: string;
   lines?: number;  // Number of lines to show (default 1)
-  render?: (field: DetailFormFieldDefinition<T>,
+  render?: (field: BasicFormFieldDefinition<T>,
             value: T[keyof T],
             onChange?: (value: string) => void) => ReactNode;
   validate?: (value: string) => boolean;
 }
 
-/** Detail form props, parameterised by the type we are displaying */
-export interface DetailFormProps<T> extends FormProps<T>
+/** Basic form props, parameterised by the type we are displaying */
+export interface BasicFormProps<T> extends FormProps<T>
 {
   onDelete?: (item: T) => void;
   onSave?: (item: T) => void;
-  fields?: DetailFormFieldDefinition<T>[];
+  fields?: BasicFormFieldDefinition<T>[];
   getTitle?: (item: T) => string;
 };
 
 /** React generic detail form component */
-export default function DetailForm<T>(
+export default function BasicForm<T>(
   { intent, item, onClose, onDelete, onSave, fields, getTitle }:
-  DetailFormProps<T>)
+  BasicFormProps<T>)
 {
   const [editable, setEditable] =
     useState(intent === FormIntent.Edit
@@ -66,7 +66,7 @@ export default function DetailForm<T>(
   };
 
   // HOF onchange for a particular field
-  const onChangeForField = (field: DetailFormFieldDefinition<T>) =>
+  const onChangeForField = (field: BasicFormFieldDefinition<T>) =>
     (value: string) => {
       if (editable && (!field.validate || field.validate(value)))
         setItemState((prevState: T) => ({
