@@ -12,7 +12,8 @@ import { ReactNode } from 'react';
 export interface ListViewColumnDefinition<T> {
   key: keyof T;
   label: string;
-  render?: (item: T) => ReactNode
+  render?: (item: T) => ReactNode;
+  sort?: boolean;
 }
 
 /** List view props, parameterised by the type we are displaying */
@@ -27,6 +28,13 @@ export interface ListViewProps<T extends HasUniqueId> {
 export default function ListView<T extends HasUniqueId>(
   { items, onSelect, onDelete, columns}: ListViewProps<T>)
 {
+  // Sort items on any field that requires it, assuming only one for now
+  // (later we might offer the user the choice, if more than one)
+  for(const column of columns)
+    if (column.sort)
+      items.sort((a: T, b: T) =>
+        String(a[column.key]).localeCompare(String(b[column.key])));
+
   return (
     <TableContainer>
       <Table size="small" sx={{ width: 'auto'}}>

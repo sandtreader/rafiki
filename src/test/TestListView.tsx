@@ -13,10 +13,11 @@ const testData: TestData[] = [
   { id: '1', name: 'Alice', age: 30, email: 'alice@example.com' },
   { id: '2', name: 'Bob', age: 25, email: 'bob@example.com' },
   { id: '3', name: 'Carol', age: 35, email: 'carol@example.com' },
+  { id: '4', name: 'Abigail', age: 6, email: 'abby@sortsfirst.net' },
 ];
 
 const columns: ListViewColumnDefinition<TestData>[] = [
-  { key: 'name', label: 'Name' },
+  { key: 'name', label: 'Name', sort: true },
   { key: 'age', label: 'Age',
     render: (item) => item.age > 30?"Over 30":item.age },
   { key: 'email', label: 'Email' },
