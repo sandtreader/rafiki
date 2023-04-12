@@ -1,6 +1,7 @@
 import React from 'react';
 import FilteredView from '../lib/FilteredView';
 import ListView, { ListViewColumnDefinition } from '../lib/ListView';
+import { Button } from '@mui/material';
 
 interface TestData {
   id: string;
@@ -36,11 +37,17 @@ const TestListView: React.FunctionComponent = () => {
     console.log('Create');
   };
 
+  const extras = [ <Button variant="outlined">Extra</Button> ];
+
   return (
     <div>
       <h1>Test Filtered List View</h1>
-      <FilteredView<TestData> items={testData} searchColumns={['name', 'age']}
-        onCreate={handleCreate}>
+      <FilteredView<TestData>
+        items={testData}
+        searchColumns={['name', 'age']}
+        onCreate={handleCreate}
+        headerExtras={extras}
+        >
         {(filteredItems: TestData[]) => (
           <ListView<TestData>
             items={filteredItems}

@@ -10,12 +10,14 @@ interface FilteredViewProps<T extends HasUniqueId> {
   children: (filteredItems: T[]) => ReactNode;  // Display function
   searchColumns?: (keyof T)[];  // Properties to search in, or all
   onCreate?: () => void;        // Optional create function
+  headerExtras?: Array<ReactNode>;  // Optional extra controls for header
 }
 
 /** Filtered view - offers a search filter box to filter items displayed
    by its child */
 export default function FilteredView<T extends HasUniqueId>(
-  { items, children, searchColumns, onCreate }: FilteredViewProps<T>)
+  { items, children, searchColumns, onCreate, headerExtras }:
+    FilteredViewProps<T>)
 {
   const [filter, setFilter] = useState('');
 
@@ -51,8 +53,10 @@ export default function FilteredView<T extends HasUniqueId>(
 
   return (
     <>
-      <Box display="flex" justifyContent="space-between"
-           sx={{ margin: '10px 0' }}>
+      <Box display="flex" sx={{ margin: '10px 0', alignItems: 'center' }}>
+        {
+          headerExtras?.map(extra => <Box sx={{ m: 1 }}>{extra}</Box>)
+        }
         <Box>
           <TextField
             label="Search"
