@@ -1,6 +1,6 @@
 // Form to view / edit / create details of an item
 
-import React, { ReactNode, useState } from 'react';
+import { ReactNode, useState, useEffect } from 'react';
 
 import { Button, TextField, Stack, IconButton, Icon,
          DialogActions, DialogContent, DialogTitle
@@ -19,6 +19,7 @@ export interface BasicFormFieldDefinition<T> {
             value: T[keyof T],
             onChange?: (value: string) => void) => ReactNode;
   validate?: (value: string) => boolean;
+  format?: (value: string) => string;
 }
 
 /** Basic form props, parameterised by the type we are displaying */
@@ -39,6 +40,21 @@ export default function BasicForm<T>(
     useState(intent === FormIntent.Edit
           || intent === FormIntent.Create);
   const [itemState, setItemState] = useState<T>({... item});
+
+  // Pre-format any fields that need it
+  useEffect(() => {
+    for(const field of fields || [])
+    {
+      if (field.format)
+      {
+        const formatted = field.format(String(itemState[field.key]));
+        setItemState((prevState: T) => ({
+          ...prevState,
+          [field.key]: formatted
+        }));
+      }
+    }
+  }, []);
 
   // Save changes
   const save = async () => {
