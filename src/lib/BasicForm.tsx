@@ -3,10 +3,10 @@
 import { ReactNode, useState, useEffect } from 'react';
 
 import { Button, TextField, Stack, IconButton, Icon,
-         DialogActions, DialogContent, DialogTitle
+         DialogActions, DialogContent, DialogTitle, Chip, Typography
 } from '@mui/material';
 
-import { FormIntent, FormProps } from './Types';
+import { FormIntent, FormProps, HasUniqueId } from './Types';
 
 /** Definition of fields we want to show */
 // - note using keyof to ensure that the keys included really are
@@ -15,11 +15,25 @@ export interface BasicFormFieldDefinition<T> {
   key: keyof T;
   label: string;
   lines?: number;  // Number of lines to show (default 1)
+
+  // Custom render function - overrides usual TextField
   render?: (field: BasicFormFieldDefinition<T>,
             value: T[keyof T],
             onChange?: (value: T[keyof T]) => void) => ReactNode;
+
+  // Validation function - run on value before change accepted
   validate?: (value: T[keyof T]) => boolean;
+
+  // Initial formatter (e.g. pretty-print XML)
   format?: (value: T[keyof T]) => string;
+
+  // List of all possible array item values - presence of this makes this
+  // an array field
+  arrayItems?: HasUniqueId[];
+
+  // Array item name function - gives the name for a given item if present,
+  // otherwise just uses the ID
+  getItemName?: (item: HasUniqueId) => string;
 }
 
 /** Basic form props, parameterised by the type we are displaying */
@@ -91,6 +105,16 @@ export default function BasicForm<T>(
         }));
     };
 
+  // Delete an array item in the given value
+  const deleteArrayItem =
+    (field: BasicFormFieldDefinition<T>, arrayItem: HasUniqueId) => {
+      setItemState((prevState: T) => ({
+        ...prevState,
+        [field.key]: (prevState[field.key] as HasUniqueId[])
+          .filter(ai => ai.id !== arrayItem.id)
+      }));
+    };
+
   return (
     <>
       <Stack direction="row" justifyContent="space-between">
@@ -119,22 +143,46 @@ export default function BasicForm<T>(
       <DialogContent>
         <Stack direction="column" spacing={2}>
           {
-            fields?.map( field =>
-              field.render
-              ?
-              field.render(field, itemState[field.key],
-                           onChangeForField(field))
-              :
-              <TextField key={String(field.key)}
-                         label={field.label} value={itemState[field.key]}
-                         multiline={field.lines !== undefined &&
-                                    field.lines > 1}
-                         minRows={field.lines}
-                         onChange={
-                           e => onChangeForField(field)
-                                  (e.target.value as T[keyof T])
-                         }/>
-            )
+            fields?.map( field => {
+              const value = itemState[field.key];
+
+              // Custom render?
+              if (field.render)
+                return field.render(field, value, onChangeForField(field))
+
+              // Array?
+              if (field.arrayItems)
+              {
+                const items = (value as HasUniqueId[]);
+                return <>
+                  <Typography variant="h6">{field.label}</Typography>
+                  <Stack direction="row" spacing={2}>
+                    {
+                      items.map(item => {
+                        const name = field.getItemName?field.getItemName(item)
+                                    :item.id;
+                        return <Chip key={item.id} label={name}
+                                     variant="outlined"
+                                     onDelete={editable?
+                                          () => deleteArrayItem(field, item)
+                                          :undefined}
+                        />
+                      })
+                    }
+                  </Stack>
+                </>
+              }
+
+              // Default to text field
+              return <TextField key={String(field.key)}
+                                label={field.label} value={value}
+                                multiline={field.lines !== undefined &&
+                                           field.lines > 1}
+                                minRows={field.lines}
+                                onChange={ e => onChangeForField(field)
+                                (e.target.value as T[keyof T]) }
+              />
+            })
           }
         </Stack>
       </DialogContent>
