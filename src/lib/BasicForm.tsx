@@ -39,7 +39,7 @@ export default function BasicForm<T>(
   const [editable, setEditable] =
     useState(intent === FormIntent.Edit
           || intent === FormIntent.Create);
-  const [itemState, setItemState] = useState<T>({... item});
+  const [itemState, setItemState] = useState<T>({...item});
 
   // Pre-format any fields that need it
   useEffect(() => {
@@ -47,21 +47,21 @@ export default function BasicForm<T>(
     {
       if (field.format)
       {
-        const formatted = field.format(String(itemState[field.key]));
+        const formatted = field.format(String(item[field.key]));
         setItemState((prevState: T) => ({
           ...prevState,
           [field.key]: formatted
         }));
       }
     }
-  }, []);
+  }, [fields, item]);
 
   // Save changes
   const save = async () => {
     // Anything changed?
     let changed = false;
     for(const field of fields || [])
-      if (itemState[field.key] != item[field.key])
+      if (itemState[field.key] !== item[field.key])
       {
         changed = true;
         break;
@@ -72,7 +72,7 @@ export default function BasicForm<T>(
   };
 
   const reset = () => {
-    setItemState({... item});
+    setItemState({...item});
   };
 
   // Delete the whole item and close
@@ -125,8 +125,10 @@ export default function BasicForm<T>(
               field.render(field, itemState[field.key],
                            onChangeForField(field))
               :
-              <TextField label={field.label} value={itemState[field.key]}
-                         multiline={field.lines != undefined && field.lines > 1}
+              <TextField key={String(field.key)}
+                         label={field.label} value={itemState[field.key]}
+                         multiline={field.lines !== undefined &&
+                                    field.lines > 1}
                          minRows={field.lines}
                          onChange={
                            e => onChangeForField(field)(e.target.value)
