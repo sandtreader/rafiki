@@ -21,7 +21,7 @@ const fields: BasicFormFieldDefinition<TestData>[] = [
     render: (field, value, onChange) =>
       <TextField variant="filled" label={field.label} value={value}
                  onChange={e => onChange?onChange(e.target.value):false} />,
-    validate: (value) => /^([1-9]\d{0,2})?$/.test(value)
+    validate: (value) => /^([1-9]\d{0,2})?$/.test(String(value))
   },
   { key: 'email', label: 'Email' },
   { key: 'notes', label: 'Notes', lines: 10 }

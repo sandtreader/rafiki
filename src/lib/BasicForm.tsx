@@ -17,9 +17,9 @@ export interface BasicFormFieldDefinition<T> {
   lines?: number;  // Number of lines to show (default 1)
   render?: (field: BasicFormFieldDefinition<T>,
             value: T[keyof T],
-            onChange?: (value: string) => void) => ReactNode;
-  validate?: (value: string) => boolean;
-  format?: (value: string) => string;
+            onChange?: (value: T[keyof T]) => void) => ReactNode;
+  validate?: (value: T[keyof T]) => boolean;
+  format?: (value: T[keyof T]) => string;
 }
 
 /** Basic form props, parameterised by the type we are displaying */
@@ -47,7 +47,7 @@ export default function BasicForm<T>(
     {
       if (field.format)
       {
-        const formatted = field.format(String(item[field.key]));
+        const formatted = field.format(item[field.key]);
         setItemState((prevState: T) => ({
           ...prevState,
           [field.key]: formatted
@@ -83,7 +83,7 @@ export default function BasicForm<T>(
 
   // HOF onchange for a particular field
   const onChangeForField = (field: BasicFormFieldDefinition<T>) =>
-    (value: string) => {
+    (value: T[keyof T]) => {
       if (editable && (!field.validate || field.validate(value)))
         setItemState((prevState: T) => ({
           ...prevState,
@@ -131,7 +131,8 @@ export default function BasicForm<T>(
                                     field.lines > 1}
                          minRows={field.lines}
                          onChange={
-                           e => onChangeForField(field)(e.target.value)
+                           e => onChangeForField(field)
+                                  (e.target.value as T[keyof T])
                          }/>
             )
           }
