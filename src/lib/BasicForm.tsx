@@ -3,11 +3,11 @@
 import { ReactNode, useState, useEffect } from 'react';
 
 import { Button, TextField, Stack, IconButton, Icon,
-         DialogActions, DialogContent, DialogTitle, Chip, Typography,
-         Select, MenuItem, Autocomplete
+         DialogActions, DialogContent, DialogTitle, Typography
 } from '@mui/material';
 
 import { FormIntent, FormProps, HasUniqueId } from './Types';
+import ChipArrayField from './ChipArrayField';
 
 /** Definition of fields we want to show */
 // - note using keyof to ensure that the keys included really are
@@ -125,49 +125,6 @@ export default function BasicForm<T>(
       }));
     };
 
-  // Array item list using chips
-  const chipArrayItemsList =
-    (field: BasicFormFieldDefinition<T>, items: HasUniqueId[]) => {
-      // Get the possible items not already used
-      const unusedItems = field.arrayItems?.filter(
-        ai => !items.find(i => ai.id === i.id)) || [];
-
-      return <Stack direction="column" spacing={2}>
-        <Stack direction="row" spacing={0} flexWrap="wrap"
-               justifyContent="flex-start" alignItems="center">
-          {
-            // Current items
-            items.map(item => {
-              const name = field.getItemName?field.getItemName(item)
-                          :item.id;
-              return <Chip key={item.id} label={name}
-                           variant="outlined"
-                           sx={{ marginRight: "8px",
-                                 marginBottom: "8px" }}
-                           onDelete={editable?
-                                     () => deleteArrayItem(field, item)
-                                          :undefined}
-              />
-            })
-          }
-        </Stack>
-        {
-          // Selector to add new ones
-          editable && unusedItems.length > 0 &&
-          <Autocomplete
-            blurOnSelect={true}
-            getOptionLabel={ item => field.getItemName?field.getItemName(item)
-                                    :String(item.id) }
-            options={unusedItems}
-            renderInput={(params) => <TextField {...params} fullWidth
-                                                label="Add" />}
-            onChange={ (e, value) =>
-              { if (value) addArrayItem(field, value); } }
-          />
-        }
-      </Stack>
-    };
-
   return (
     <>
       <Stack direction="row" justifyContent="space-between">
@@ -209,7 +166,10 @@ export default function BasicForm<T>(
                 const items = (value as HasUniqueId[]);
                 return <>
                   <Typography variant="h6">{field.label}</Typography>
-                  { chipArrayItemsList(field, items) }
+                  <ChipArrayField field={field} items={items}
+                                  editable={editable}
+                                  deleteItem={deleteArrayItem}
+                                  addItem={addArrayItem}/>
                 </>;
               }
 
