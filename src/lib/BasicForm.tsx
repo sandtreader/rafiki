@@ -3,7 +3,8 @@
 import { ReactNode, useState, useEffect } from 'react';
 
 import { Button, TextField, Stack, IconButton, Icon,
-         DialogActions, DialogContent, DialogTitle, Chip, Typography
+         DialogActions, DialogContent, DialogTitle, Chip, Typography,
+         Select, MenuItem
 } from '@mui/material';
 
 import { FormIntent, FormProps, HasUniqueId } from './Types';
@@ -115,6 +116,15 @@ export default function BasicForm<T>(
       }));
     };
 
+  // Add an array item
+  const addArrayItem =
+    (field: BasicFormFieldDefinition<T>, arrayItem: HasUniqueId) => {
+      setItemState((prevState: T) => ({
+        ...prevState,
+        [field.key]: (prevState[field.key] as HasUniqueId[]).concat([arrayItem])
+      }));
+    };
+
   return (
     <>
       <Stack direction="row" justifyContent="space-between">
@@ -154,10 +164,15 @@ export default function BasicForm<T>(
               if (field.arrayItems)
               {
                 const items = (value as HasUniqueId[]);
+
+                // Get the possible items not already used
+                const unusedItems = field.arrayItems.filter(
+                  ai => !items.find(i => ai.id === i.id));
+
                 return <>
                   <Typography variant="h6">{field.label}</Typography>
                   <Stack direction="row" spacing={0} flexWrap="wrap"
-                         justifyContent="flex-start">
+                         justifyContent="flex-start" alignItems="center">
                     {
                       items.map(item => {
                         const name = field.getItemName?field.getItemName(item)
@@ -167,10 +182,30 @@ export default function BasicForm<T>(
                                      sx={{ marginRight: "8px",
                                            marginBottom: "8px" }}
                                      onDelete={editable?
-                                          () => deleteArrayItem(field, item)
-                                          :undefined}
+                                               () => deleteArrayItem(field, item)
+                                                    :undefined}
                         />
                       })
+                    }
+                    {
+                      editable && unusedItems.length > 0 &&
+                      <Stack direction="row">
+                        <IconButton disabled>
+                          <Icon>add</Icon>
+                        </IconButton>
+                        <Select variant="standard">
+                          {
+                            unusedItems.map((item, i) => {
+                              const name = field.getItemName?
+                                           field.getItemName(item):item.id;
+                              return <MenuItem key={i} value={i}
+                                               onClick={() => addArrayItem(field, item)}>
+                                {name}
+                              </MenuItem>
+                            })
+                          }
+                        </Select>
+                      </Stack>
                     }
                   </Stack>
                 </>
