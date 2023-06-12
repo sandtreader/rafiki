@@ -125,6 +125,54 @@ export default function BasicForm<T>(
       }));
     };
 
+  // Array item list using chips
+  const chipArrayItemsList =
+    (field: BasicFormFieldDefinition<T>, items: HasUniqueId[]) => {
+      // Get the possible items not already used
+      const unusedItems = field.arrayItems?.filter(
+        ai => !items.find(i => ai.id === i.id)) || [];
+
+      return <Stack direction="row" spacing={0} flexWrap="wrap"
+                    justifyContent="flex-start" alignItems="center">
+        {
+          // Current items
+          items.map(item => {
+            const name = field.getItemName?field.getItemName(item)
+                        :item.id;
+            return <Chip key={item.id} label={name}
+                         variant="outlined"
+                         sx={{ marginRight: "8px",
+                               marginBottom: "8px" }}
+                         onDelete={editable?
+                                   () => deleteArrayItem(field, item)
+                                        :undefined}
+            />
+          })
+        }
+        {
+          // Selector to add new ones
+          editable && unusedItems.length > 0 &&
+          <Stack direction="row">
+            <IconButton disabled>
+              <Icon>add</Icon>
+            </IconButton>
+            <Select variant="standard">
+              {
+                unusedItems.map((item, i) => {
+                  const name = field.getItemName?
+                               field.getItemName(item):item.id;
+                  return <MenuItem key={i}
+                                   onClick={() => addArrayItem(field, item)}>
+                    {name}
+                  </MenuItem>
+                })
+              }
+            </Select>
+          </Stack>
+        }
+      </Stack>
+    };
+
   return (
     <>
       <Stack direction="row" justifyContent="space-between">
@@ -164,51 +212,10 @@ export default function BasicForm<T>(
               if (field.arrayItems)
               {
                 const items = (value as HasUniqueId[]);
-
-                // Get the possible items not already used
-                const unusedItems = field.arrayItems.filter(
-                  ai => !items.find(i => ai.id === i.id));
-
                 return <>
                   <Typography variant="h6">{field.label}</Typography>
-                  <Stack direction="row" spacing={0} flexWrap="wrap"
-                         justifyContent="flex-start" alignItems="center">
-                    {
-                      items.map(item => {
-                        const name = field.getItemName?field.getItemName(item)
-                                    :item.id;
-                        return <Chip key={item.id} label={name}
-                                     variant="outlined"
-                                     sx={{ marginRight: "8px",
-                                           marginBottom: "8px" }}
-                                     onDelete={editable?
-                                               () => deleteArrayItem(field, item)
-                                                    :undefined}
-                        />
-                      })
-                    }
-                    {
-                      editable && unusedItems.length > 0 &&
-                      <Stack direction="row">
-                        <IconButton disabled>
-                          <Icon>add</Icon>
-                        </IconButton>
-                        <Select variant="standard">
-                          {
-                            unusedItems.map((item, i) => {
-                              const name = field.getItemName?
-                                           field.getItemName(item):item.id;
-                              return <MenuItem key={i} value={i}
-                                               onClick={() => addArrayItem(field, item)}>
-                                {name}
-                              </MenuItem>
-                            })
-                          }
-                        </Select>
-                      </Stack>
-                    }
-                  </Stack>
-                </>
+                  { chipArrayItemsList(field, items) }
+                </>;
               }
 
               // Default to text field
