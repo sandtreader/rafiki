@@ -156,13 +156,16 @@ export default function BasicForm<T>(
                 const items = (value as HasUniqueId[]);
                 return <>
                   <Typography variant="h6">{field.label}</Typography>
-                  <Stack direction="row" spacing={2}>
+                  <Stack direction="row" spacing={0} flexWrap="wrap"
+                         justifyContent="flex-start">
                     {
                       items.map(item => {
                         const name = field.getItemName?field.getItemName(item)
                                     :item.id;
                         return <Chip key={item.id} label={name}
                                      variant="outlined"
+                                     sx={{ marginRight: "8px",
+                                           marginBottom: "8px" }}
                                      onDelete={editable?
                                           () => deleteArrayItem(field, item)
                                           :undefined}
