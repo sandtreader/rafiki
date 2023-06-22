@@ -8,6 +8,12 @@ import { Button, TextField, Stack, IconButton, Icon,
 
 import { FormIntent, FormProps, HasUniqueId } from './Types';
 import ChipArrayField from './ChipArrayField';
+import TableArrayField from './TableArrayField';
+
+export enum BasicFormFieldArrayStyle {
+  chips,
+  table
+};
 
 /** Definition of fields we want to show */
 // - note using keyof to ensure that the keys included really are
@@ -31,6 +37,9 @@ export interface BasicFormFieldDefinition<T> {
   // List of all possible array item values - presence of this makes this
   // an array field
   arrayItems?: HasUniqueId[];
+
+  // Array display style - default 'chips'
+  arrayStyle?: BasicFormFieldArrayStyle;
 
   // Array item name function - gives the name for a given item if present,
   // otherwise just uses the ID
@@ -164,13 +173,27 @@ export default function BasicForm<T>(
               if (field.arrayItems)
               {
                 const items = (value as HasUniqueId[]);
-                return <>
-                  <Typography variant="h6">{field.label}</Typography>
-                  <ChipArrayField field={field} items={items}
-                                  editable={editable}
-                                  deleteItem={deleteArrayItem}
-                                  addItem={addArrayItem}/>
-                </>;
+                switch (field.arrayStyle)
+                {
+                  case undefined:
+                  case BasicFormFieldArrayStyle.chips:
+                  return <>
+                    <Typography variant="h6">{field.label}</Typography>
+                    <ChipArrayField field={field} items={items}
+                                    editable={editable}
+                                    deleteItem={deleteArrayItem}
+                                    addItem={addArrayItem}/>
+                  </>;
+
+                  case BasicFormFieldArrayStyle.table:
+                  return <>
+                    <Typography variant="h6">{field.label}</Typography>
+                    <TableArrayField field={field} items={items}
+                                     editable={editable}
+                                     deleteItem={deleteArrayItem}
+                                     addItem={addArrayItem}/>
+                  </>
+                }
               }
 
               // Default to text field

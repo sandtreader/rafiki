@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import BasicForm, { BasicFormFieldDefinition } from '../lib/BasicForm';
+import BasicForm, { BasicFormFieldDefinition, BasicFormFieldArrayStyle }
+  from '../lib/BasicForm';
 import { FormIntent } from '../lib/Types';
 import { Dialog, TextField } from '@mui/material';
 
@@ -42,6 +43,7 @@ const fields: BasicFormFieldDefinition<TestData>[] = [
   { key: 'email', label: 'Email' },
   { key: 'notes', label: 'Notes', lines: 10 },
   { key: 'friends', label: 'Friends', arrayItems: allFriends,
+    arrayStyle: BasicFormFieldArrayStyle.table,
     getItemName: item => (item as Friend).name
   }
 ];
