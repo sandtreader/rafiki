@@ -9,10 +9,12 @@ import { Button, TextField, Stack, IconButton, Icon,
 import { FormIntent, FormProps, HasUniqueId } from './Types';
 import ChipArrayField from './ChipArrayField';
 import TableArrayField from './TableArrayField';
+import ChecklistArrayField from './ChecklistArrayField';
 
 export enum BasicFormFieldArrayStyle {
   chips,
-  table
+  table,
+  checklist
 };
 
 /** Definition of fields we want to show */
@@ -193,6 +195,16 @@ export default function BasicForm<T>(
                                      deleteItem={deleteArrayItem}
                                      addItem={addArrayItem}/>
                   </>
+
+                  case BasicFormFieldArrayStyle.checklist:
+                  return <>
+                    <Typography variant="h6">{field.label}</Typography>
+                    <ChecklistArrayField field={field} items={items}
+                                         editable={editable}
+                                         deleteItem={deleteArrayItem}
+                                         addItem={addArrayItem}/>
+                  </>
+
                 }
               }
 
