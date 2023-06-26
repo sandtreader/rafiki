@@ -13,5 +13,6 @@ export { type HasUniqueId, FormIntent, type FormProps } from './lib/Types';
 export { default as ListView, type ListViewColumnDefinition } from './lib/ListView';
 export { default as FilteredView } from './lib/FilteredView';
 export { default as BasicForm, type BasicFormFieldDefinition,
-         type BasicFormProps } from './lib/BasicForm';
+         type BasicFormProps, type BasicFormFieldArrayStyle }
+  from './lib/BasicForm';
 export { default as ListEditPage } from './lib/ListEditPage';

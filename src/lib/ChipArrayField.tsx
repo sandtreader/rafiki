@@ -20,8 +20,14 @@ export interface ChipArrayFieldProps<T>
 export default function ChipArrayField<T>(
   { field, items, editable, deleteItem, addItem }: ChipArrayFieldProps<T>)
 {
+  let allItems: HasUniqueId[] | undefined;
+  if (typeof field.arrayItems === "function")
+    allItems = field.arrayItems();
+  else
+    allItems = field.arrayItems;
+
   // Get the possible items not already used
-  const unusedItems = field.arrayItems?.filter(
+  const unusedItems = allItems?.filter(
     ai => !items.find(i => ai.id === i.id)) || [];
 
   return <Stack direction="column" spacing={2}>

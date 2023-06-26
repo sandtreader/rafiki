@@ -21,8 +21,14 @@ export interface TableArrayFieldProps<T>
 export default function TableArrayField<T>(
   { field, items, editable, deleteItem, addItem }: TableArrayFieldProps<T>)
 {
+  let allItems: HasUniqueId[] | undefined;
+  if (typeof field.arrayItems === "function")
+    allItems = field.arrayItems();
+  else
+    allItems = field.arrayItems;
+
   // Get the possible items not already used
-  const unusedItems = field.arrayItems?.filter(
+  const unusedItems = allItems?.filter(
     ai => !items.find(i => ai.id === i.id)) || [];
 
   return <Table>

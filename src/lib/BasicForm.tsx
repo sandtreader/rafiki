@@ -36,9 +36,9 @@ export interface BasicFormFieldDefinition<T> {
   // Initial formatter (e.g. pretty-print XML)
   format?: (value: T[keyof T]) => string;
 
-  // List of all possible array item values - presence of this makes this
-  // an array field
-  arrayItems?: HasUniqueId[];
+  // List of all possible array item values, or a function to derive it
+  // presence of this makes this an array field
+  arrayItems?: HasUniqueId[] | (() => HasUniqueId[]);
 
   // Array display style - default 'chips'
   arrayStyle?: BasicFormFieldArrayStyle;

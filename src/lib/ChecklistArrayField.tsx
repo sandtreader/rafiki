@@ -20,11 +20,17 @@ export interface ChecklistArrayFieldProps<T>
 export default function ChecklistArrayField<T>(
   { field, items, editable, deleteItem, addItem }: ChecklistArrayFieldProps<T>)
 {
+  let allItems: HasUniqueId[] | undefined;
+  if (typeof field.arrayItems === "function")
+    allItems = field.arrayItems();
+  else
+    allItems = field.arrayItems;
+
   return <Table>
     <TableBody>
       {
         // We show all items
-        field.arrayItems?.map(item => {
+        allItems?.map(item => {
           const name = field.getItemName?field.getItemName(item)
                       :item.id;
           const checked = items.indexOf(item) !== -1;
