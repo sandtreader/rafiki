@@ -43,7 +43,7 @@ const fields: BasicFormFieldDefinition<TestData>[] = [
   { key: 'email', label: 'Email' },
   { key: 'notes', label: 'Notes', lines: 10 },
   { key: 'friends', label: 'Friends',
-    arrayItems: () => allFriends,
+    arrayItems: () => Promise.resolve(allFriends),
     arrayStyle: BasicFormFieldArrayStyle.checklist,
     getItemName: item => (item as Friend).name
   }

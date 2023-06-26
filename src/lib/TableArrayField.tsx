@@ -12,6 +12,7 @@ export interface TableArrayFieldProps<T>
 {
   field: BasicFormFieldDefinition<T>;
   items: HasUniqueId[];
+  allItems: HasUniqueId[];
   editable: boolean;
   deleteItem: (field: BasicFormFieldDefinition<T>, item: HasUniqueId) => void;
   addItem: (field: BasicFormFieldDefinition<T>, item: HasUniqueId) => void;
@@ -19,14 +20,9 @@ export interface TableArrayFieldProps<T>
 
 /** React table-based array field display / edit */
 export default function TableArrayField<T>(
-  { field, items, editable, deleteItem, addItem }: TableArrayFieldProps<T>)
+  { field, items, allItems, editable, deleteItem, addItem
+  }: TableArrayFieldProps<T>)
 {
-  let allItems: HasUniqueId[] | undefined;
-  if (typeof field.arrayItems === "function")
-    allItems = field.arrayItems();
-  else
-    allItems = field.arrayItems;
-
   // Get the possible items not already used
   const unusedItems = allItems?.filter(
     ai => !items.find(i => ai.id === i.id)) || [];

@@ -11,6 +11,7 @@ export interface ChipArrayFieldProps<T>
 {
   field: BasicFormFieldDefinition<T>;
   items: HasUniqueId[];
+  allItems: HasUniqueId[];
   editable: boolean;
   deleteItem: (field: BasicFormFieldDefinition<T>, item: HasUniqueId) => void;
   addItem: (field: BasicFormFieldDefinition<T>, item: HasUniqueId) => void;
@@ -18,14 +19,9 @@ export interface ChipArrayFieldProps<T>
 
 /** React chip-based array field display / edit */
 export default function ChipArrayField<T>(
-  { field, items, editable, deleteItem, addItem }: ChipArrayFieldProps<T>)
+  { field, items, allItems, editable, deleteItem, addItem
+  }: ChipArrayFieldProps<T>)
 {
-  let allItems: HasUniqueId[] | undefined;
-  if (typeof field.arrayItems === "function")
-    allItems = field.arrayItems();
-  else
-    allItems = field.arrayItems;
-
   // Get the possible items not already used
   const unusedItems = allItems?.filter(
     ai => !items.find(i => ai.id === i.id)) || [];

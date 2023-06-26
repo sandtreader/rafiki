@@ -11,6 +11,7 @@ export interface ChecklistArrayFieldProps<T>
 {
   field: BasicFormFieldDefinition<T>;
   items: HasUniqueId[];
+  allItems: HasUniqueId[];
   editable: boolean;
   deleteItem: (field: BasicFormFieldDefinition<T>, item: HasUniqueId) => void;
   addItem: (field: BasicFormFieldDefinition<T>, item: HasUniqueId) => void;
@@ -18,14 +19,9 @@ export interface ChecklistArrayFieldProps<T>
 
 /** React table-based array field display / edit */
 export default function ChecklistArrayField<T>(
-  { field, items, editable, deleteItem, addItem }: ChecklistArrayFieldProps<T>)
+  { field, items, allItems, editable, deleteItem, addItem
+  }: ChecklistArrayFieldProps<T>)
 {
-  let allItems: HasUniqueId[] | undefined;
-  if (typeof field.arrayItems === "function")
-    allItems = field.arrayItems();
-  else
-    allItems = field.arrayItems;
-
   return <Table>
     <TableBody>
       {

@@ -12,9 +12,9 @@ import TableArrayField from './TableArrayField';
 import ChecklistArrayField from './ChecklistArrayField';
 
 export enum BasicFormFieldArrayStyle {
-  chips,
-  table,
-  checklist
+  chips = 0,
+  table = 1,
+  checklist = 2
 };
 
 /** Definition of fields we want to show */
@@ -38,7 +38,7 @@ export interface BasicFormFieldDefinition<T> {
 
   // List of all possible array item values, or a function to derive it
   // presence of this makes this an array field
-  arrayItems?: HasUniqueId[] | (() => HasUniqueId[]);
+  arrayItems?: HasUniqueId[] | (() => Promise<HasUniqueId[]>);
 
   // Array display style - default 'chips'
   arrayStyle?: BasicFormFieldArrayStyle;
@@ -66,6 +66,8 @@ export default function BasicForm<T>(
     useState(intent === FormIntent.Edit
           || intent === FormIntent.Create);
   const [itemState, setItemState] = useState<T>({...item});
+  const [allItemsForField, setAllItemsForField] =
+    useState<{ [id: string]: HasUniqueId[] }>({});
 
   // Pre-format any fields that need it
   useEffect(() => {
@@ -81,6 +83,31 @@ export default function BasicForm<T>(
       }
     }
   }, [fields, item]);
+
+  // Get the allItems list for each field that needs it
+  // note this can be async
+  useEffect(() => {
+    const getAllItems = async () => {
+      for(const field of fields || [])
+      {
+        if (field.arrayItems)
+        {
+          let allItems: HasUniqueId[];
+          if (typeof field.arrayItems === "function")
+            allItems = await field.arrayItems();
+          else
+            allItems = field.arrayItems;
+
+          setAllItemsForField(prevState => ({
+            ...prevState,
+            [field.key]: allItems
+          }));
+        }
+      }
+    };
+
+    getAllItems();
+  }, [fields]);
 
   // Save changes
   const save = async () => {
@@ -175,6 +202,8 @@ export default function BasicForm<T>(
               if (field.arrayItems)
               {
                 const items = (value as HasUniqueId[]);
+                const allItems = allItemsForField[String(field.key)];
+
                 switch (field.arrayStyle)
                 {
                   case undefined:
@@ -182,6 +211,7 @@ export default function BasicForm<T>(
                   return <>
                     <Typography variant="h6">{field.label}</Typography>
                     <ChipArrayField field={field} items={items}
+                                    allItems={allItems}
                                     editable={editable}
                                     deleteItem={deleteArrayItem}
                                     addItem={addArrayItem}/>
@@ -191,6 +221,7 @@ export default function BasicForm<T>(
                   return <>
                     <Typography variant="h6">{field.label}</Typography>
                     <TableArrayField field={field} items={items}
+                                     allItems={allItems}
                                      editable={editable}
                                      deleteItem={deleteArrayItem}
                                      addItem={addArrayItem}/>
@@ -200,6 +231,7 @@ export default function BasicForm<T>(
                   return <>
                     <Typography variant="h6">{field.label}</Typography>
                     <ChecklistArrayField field={field} items={items}
+                                         allItems={allItems}
                                          editable={editable}
                                          deleteItem={deleteArrayItem}
                                          addItem={addArrayItem}/>
