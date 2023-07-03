@@ -66,8 +66,9 @@ const TestBasicForm: React.FunctionComponent<TestBasicFormProps> =
       console.log('Delete:', item);
     };
 
-    const handleSave = (item: TestData) => {
+    const handleSave = (item: TestData, oldItem: TestData) => {
       console.log('Save:', item);
+      console.log('Old:', oldItem);
     };
 
     const form = () =>

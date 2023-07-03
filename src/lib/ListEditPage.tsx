@@ -16,7 +16,7 @@ export interface ListEditPageProps<T extends HasUniqueId> {
   typeName: string;
   fetchItems: () => Promise<T[]>;
   createItem: (id: string) => Promise<T>;
-  saveItem: (item: T) => Promise<void>;
+  saveItem: (item: T, oldItem: T) => Promise<void>;
   deleteItem: (item: T) => Promise<void>;
   columns: ListViewColumnDefinition<T>[];
   searchColumns?: (keyof T)[];  // Properties to search in, or all
@@ -58,8 +58,8 @@ export default function ListEditPage<T extends HasUniqueId>(
   }
 
   // Save changes
-  const onSave = async (item: T) => {
-    await saveItem(item);
+  const onSave = async (item: T, oldItem: T) => {
+    await saveItem(item, oldItem);
     fetch();
   }
 

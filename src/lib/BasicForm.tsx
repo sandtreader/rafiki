@@ -52,7 +52,7 @@ export interface BasicFormFieldDefinition<T> {
 export interface BasicFormProps<T> extends FormProps<T>
 {
   onDelete?: (item: T) => void;
-  onSave?: (item: T) => void;
+  onSave?: (item: T, oldItem: T) => void;
   fields?: BasicFormFieldDefinition<T>[];
   getTitle?: (item: T) => string;
 };
@@ -120,7 +120,7 @@ export default function BasicForm<T>(
         break;
       }
 
-    if (changed && onSave) onSave(itemState);
+    if (changed && onSave) onSave(itemState, item);
     if (onClose) onClose(changed);
   };
 
