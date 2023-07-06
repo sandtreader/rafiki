@@ -29,7 +29,7 @@ export default function ChecklistArrayField<T>(
         allItems?.map(item => {
           const name = field.getItemName?field.getItemName(item)
                       :item.id;
-          const checked = items.indexOf(item) !== -1;
+          const checked = !!items.find(it => it.id === item.id);
           return <TableRow key={item.id}>
             <TableCell sx={{ width: "1em" }} align="right">
               <Checkbox checked={checked}
