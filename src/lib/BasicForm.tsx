@@ -3,7 +3,8 @@
 import { ReactNode, useState, useEffect } from 'react';
 
 import { Button, TextField, Stack, IconButton, Icon,
-         DialogActions, DialogContent, DialogTitle, Typography
+         DialogActions, DialogContent, DialogTitle, Typography,
+         FormControlLabel, Switch
 } from '@mui/material';
 
 import { FormIntent, FormProps, HasUniqueId } from './Types';
@@ -197,6 +198,20 @@ export default function BasicForm<T>(
               // Custom render?
               if (field.render)
                 return field.render(field, value, onChangeForField(field))
+
+              // Boolean?
+              if (typeof value == "boolean")
+              {
+                return <FormControlLabel
+                         control={
+                           <Switch checked={value}
+                                   onChange={
+                                   e => onChangeForField(field)
+                                   (e.target.checked as T[keyof T])
+                                   }
+                           />}
+                         label={field.label} labelPlacement="end" />;
+              }
 
               // Array?
               if (field.arrayItems)

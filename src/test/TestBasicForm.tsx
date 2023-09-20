@@ -15,6 +15,7 @@ interface TestData {
   name: string;
   age: number;
   email: string;
+  likesBooks: boolean;
   notes?: string;
   friends?: Friend[];
 }
@@ -28,6 +29,7 @@ const allFriends = [ whiteRabbit, madHatter, dormouse, redQueen ];
 
 const testData: TestData =
   { id: '1', name: 'Alice', age: 7, email: 'alice@wonderland.com',
+    likesBooks: true,
     notes: "Tendency to fantasy involving white rabbits",
     friends: [whiteRabbit, dormouse]
   };
@@ -41,6 +43,7 @@ const fields: BasicFormFieldDefinition<TestData>[] = [
     validate: (value) => /^([1-9]\d{0,2})?$/.test(String(value))
   },
   { key: 'email', label: 'Email' },
+  { key: 'likesBooks', label: 'Likes books' },
   { key: 'notes', label: 'Notes', lines: 10 },
   { key: 'friends', label: 'Friends',
     arrayItems: () => Promise.resolve(allFriends),
