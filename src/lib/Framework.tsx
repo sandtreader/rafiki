@@ -5,6 +5,7 @@ import MenuState from './MenuState';
 import MenuStructure from './MenuStructure';
 import AuthenticationProvider from './AuthenticationProvider';
 import SessionState from './SessionState';
+import { SessionContextProvider } from './SessionContext';
 
 import { Container, Box, Drawer, TextField, Button,
          Stack, Alert, Typography,
@@ -92,7 +93,7 @@ const Framework: React.FunctionComponent<FrameworkProps> = ({
       {
         // Menu and content
         session?.loggedIn && menu &&
-        <>
+        <SessionContextProvider session={session}>
           <Stack direction='row'>
             <Drawer variant='permanent' sx={{ width: 280 }}>
               <Box sx={{width: 280}}>
@@ -105,7 +106,7 @@ const Framework: React.FunctionComponent<FrameworkProps> = ({
             </Drawer>
             <Container maxWidth={false}>{menuState.content}</Container>
           </Stack>
-        </>
+        </SessionContextProvider>
       }
     </div >
   );

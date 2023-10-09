@@ -3,6 +3,8 @@ import BasicForm, { BasicFormFieldDefinition, BasicFormFieldArrayStyle }
   from '../lib/BasicForm';
 import { FormIntent } from '../lib/Types';
 import { Dialog, TextField } from '@mui/material';
+import SessionState from '../lib/SessionState';
+import { useSessionContext } from '../lib/SessionContext';
 
 type Friend =
 {
@@ -59,6 +61,7 @@ export interface TestBasicFormProps {
 const TestBasicForm: React.FunctionComponent<TestBasicFormProps> =
   ({ dialog }) => {
     const [open, setOpen] = useState(true);
+    const session = useSessionContext().session;
 
     const handleClose = (changed: boolean) => {
       console.log(`Closing: ${changed?"changed":"unchanged"}`);
@@ -88,6 +91,7 @@ const TestBasicForm: React.FunctionComponent<TestBasicFormProps> =
     return (
       <div>
         <h1>Test Basic Form {dialog?"dialog":""}</h1>
+        <p>User: {session.userId}</p>
         {
           dialog?
           <Dialog open={open} onClose={handleClose}
