@@ -6,6 +6,7 @@ import Framework from '../lib/Framework';
 import MenuProvider from '../lib/MenuProvider';
 import MenuStructure from '../lib/MenuStructure';
 import StaticMenuProvider from '../lib/StaticMenuProvider';
+import SessionState from '../lib/SessionState';
 
 // Authentication provider
 const authProvider = new FakeAuthenticationProvider();
@@ -43,11 +44,16 @@ function App() {
     })();
   }, []);
 
+  const onSessionChange = (session: SessionState) => {
+    console.log("New session "+JSON.stringify(session));
+  }
+
   return (
     <div className="App">
       { menus &&
         <Framework authProvider={authProvider} menuProvider={menus}
-                   title="Rafiki Administration Framework Test" />
+                   title="Rafiki Administration Framework Test"
+                   onSessionChange={onSessionChange} />
       }
     </div>
   );

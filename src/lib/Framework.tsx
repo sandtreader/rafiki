@@ -15,13 +15,15 @@ type FrameworkProps = {
   authProvider: AuthenticationProvider;
   menuProvider: MenuProvider;
   title: string;
+  onSessionChange?: (session: SessionState) => void;
 };
 
 /** Top-level framework - construct this in your <App/> */
 const Framework: React.FunctionComponent<FrameworkProps> = ({
   authProvider,
   menuProvider,
-  title
+  title,
+  onSessionChange
 }) => {
   // Session state
   const [session, setSession] = useState<SessionState>();
@@ -52,13 +54,16 @@ const Framework: React.FunctionComponent<FrameworkProps> = ({
   // Actions
   const submitLogin = async () => {
     console.log(`Logging in ${userId} with ${password}`);
-    setSession(await authProvider?.login(userId, password));
+    const session = await authProvider?.login(userId, password);
+    setSession(session);
+    if (onSessionChange) onSessionChange(session);
   }
 
   const logOut = async () => {
     session && await authProvider?.logout(session);
     setSession({ loggedIn: false });
     setPassword('');
+    onSessionChange && session && onSessionChange(session);
   }
 
   return (
