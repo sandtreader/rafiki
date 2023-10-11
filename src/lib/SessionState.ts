@@ -33,8 +33,15 @@ export default class SessionState {
   public hasCapability(requirement: string): boolean
   {
     for (const capability of this.capabilities || []) {
+      // Convert a glob-style * pattern into a regexp, protecting all
+      // the special chars
+      const res = '^' +
+        capability.replace(/([.+?^=!:${}()|[\]/\\])/g, "\\$1")
+          .replace(/\*/g, '.*')
+        + '$';
+
       // We test the requirement against the capability pattern
-      const re = new RegExp('^'+capability+'$');
+      const re = new RegExp(res);
       if (re.test(requirement)) return true;
     }
 

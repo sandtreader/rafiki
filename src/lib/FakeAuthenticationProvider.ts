@@ -18,10 +18,10 @@ export default class FakeAuthenticationProvider
     // POST to URL
     if (userId === 'admin' && password === 'admin') {
       session.userName = 'Joe Admin';
-      session.capabilities = ['.*'];
+      session.capabilities = ['*'];
     } else if (userId === 'test' && password === 'foo') {
       session.userName = 'Test User';
-      session.capabilities = ['^test.*'];
+      session.capabilities = ['test*'];
     } else {
       session.loggedIn = false;
       session.error = 'Authentication failed';
