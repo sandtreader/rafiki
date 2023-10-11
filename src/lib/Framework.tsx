@@ -70,7 +70,7 @@ const Framework: React.FunctionComponent<FrameworkProps> = ({
 
   const logOut = async () => {
     session && (await authProvider?.logout(session));
-    setSession({ loggedIn: false });
+    setSession(new SessionState(false));
     setPassword('');
     onSessionChange && session && onSessionChange(session);
   };

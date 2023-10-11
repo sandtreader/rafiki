@@ -2,22 +2,42 @@
 // Copyright (c) Paul Clark 2022
 
 /** Menu state */
-export default interface SessionState {
+export default class SessionState {
   /** Logged in? */
-  loggedIn: boolean;
+  public loggedIn: boolean;
 
   /** User ID if logged in */
-  userId?: string;
+  public userId?: string;
 
   /** User visible name if logged in */
-  userName?: string;
+  public userName?: string;
 
   /** List of capability patterns */
-  capabilities?: Array<string>;
+  public capabilities?: Array<string>;
 
   /** JWT to quote back in API calls */
-  jwt?: string;
+  public jwt?: string;
 
   /** Error if login failed */
-  error?: string;
+  public error?: string;
+
+  /** Constructor */
+  public constructor(loggedIn: boolean, userId?: string)
+  {
+    this.loggedIn = loggedIn;
+    this.userId = userId;
+  }
+
+  /** Find if the user has a capability pattern matching the given
+      requirement */
+  public hasCapability(requirement: string): boolean
+  {
+    for (const capability of this.capabilities || []) {
+      // We test the requirement against the capability pattern
+      const re = new RegExp(capability);
+      if (re.test(requirement)) return true;
+    }
+
+    return false;
+  }
 }

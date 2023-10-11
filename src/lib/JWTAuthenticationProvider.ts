@@ -21,7 +21,7 @@ export default class JWTAuthenticationProvider
    */
   async login(userId: string, password: string): Promise<SessionState> {
     // Optimistic
-    const session: SessionState = { loggedIn: true, userId: userId };
+    const session = new SessionState(true, userId);
 
     const data = new URLSearchParams({
       username: userId,

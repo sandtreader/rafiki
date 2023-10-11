@@ -13,7 +13,7 @@ export default class FakeAuthenticationProvider
    */
   async login(userId: string, password: string): Promise<SessionState> {
     // Optimistic
-    const session: SessionState = { loggedIn: true, userId: userId };
+    const session = new SessionState(true, userId);
 
     // POST to URL
     if (userId === 'admin' && password === 'admin') {
