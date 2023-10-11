@@ -34,7 +34,7 @@ export default class SessionState {
   {
     for (const capability of this.capabilities || []) {
       // We test the requirement against the capability pattern
-      const re = new RegExp(capability);
+      const re = new RegExp('^'+capability+'$');
       if (re.test(requirement)) return true;
     }
 

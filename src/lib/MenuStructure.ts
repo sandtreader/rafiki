@@ -86,7 +86,7 @@ export default class MenuStructure {
         let found = false;
         for (const capability of capabilities) {
           // We test the requirement against the capability pattern
-          const re = new RegExp(capability);
+          const re = new RegExp('^'+capability+'$');
           if (re.test(requirement)) {
             found = true;
             break;
