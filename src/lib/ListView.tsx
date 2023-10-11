@@ -2,8 +2,16 @@
 // Copyright (c) Paul Clark 2023
 
 import { HasUniqueId } from './Types';
-import { TableContainer, Table, TableBody, TableCell, TableHead, TableRow,
-         IconButton, Icon } from '@mui/material';
+import {
+  TableContainer,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
+  IconButton,
+  Icon,
+} from '@mui/material';
 import { ReactNode } from 'react';
 
 /** Definition of columns we want to show */
@@ -22,61 +30,62 @@ export interface ListViewProps<T extends HasUniqueId> {
   onSelect: (item: T) => void;
   onDelete: (item: T) => void;
   columns: ListViewColumnDefinition<T>[];
-};
+}
 
 /** React generic list view component */
-export default function ListView<T extends HasUniqueId>(
-  { items, onSelect, onDelete, columns}: ListViewProps<T>)
-{
+export default function ListView<T extends HasUniqueId>({
+  items,
+  onSelect,
+  onDelete,
+  columns,
+}: ListViewProps<T>) {
   // Sort items on any field that requires it, assuming only one for now
   // (later we might offer the user the choice, if more than one)
-  for(const column of columns)
+  for (const column of columns)
     if (column.sort)
       items.sort((a: T, b: T) =>
-        String(a[column.key]).localeCompare(String(b[column.key])));
+        String(a[column.key]).localeCompare(String(b[column.key]))
+      );
 
   return (
     <TableContainer>
-      <Table size="small" sx={{ width: 'auto'}}>
+      <Table size="small" sx={{ width: 'auto' }}>
         <TableHead>
           <TableRow>
-            {
-              columns.map((column) => (
-                <TableCell key={String(column.key)}>{column.label}</TableCell>
-              ))
-            }
+            {columns.map((column) => (
+              <TableCell key={String(column.key)}>{column.label}</TableCell>
+            ))}
             <TableCell key="action">Action</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {
-            items.map((item) => {
-              return <TableRow key={item.id}
-                               onClick={_ => onSelect(item)}>
-                {
-                  columns.map((column, i) => (
-                    <TableCell key={i}>
-                      {column.render?
-                       column.render(item)
-                      :
-                       String(item[column.key])
-                      }
-                    </TableCell>
-                  ))
-                }
+          {items.map((item) => {
+            return (
+              <TableRow key={item.id} onClick={(_) => onSelect(item)}>
+                {columns.map((column, i) => (
+                  <TableCell key={i}>
+                    {column.render
+                      ? column.render(item)
+                      : String(item[column.key])}
+                  </TableCell>
+                ))}
                 <TableCell>
-                  <IconButton aria-label="delete" size="large"
-                              onClick={e => { e.stopPropagation();
-                                onDelete(item); }}>
+                  <IconButton
+                    aria-label="delete"
+                    size="large"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onDelete(item);
+                    }}
+                  >
                     <Icon>delete</Icon>
                   </IconButton>
                 </TableCell>
               </TableRow>
-            })
-          }
+            );
+          })}
         </TableBody>
       </Table>
     </TableContainer>
   );
 }
-

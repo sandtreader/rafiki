@@ -6,7 +6,8 @@ import SessionState from './SessionState';
 
 /** JWT Authentication Provider */
 export default class JWTAuthenticationProvider
-implements AuthenticationProvider {
+  implements AuthenticationProvider
+{
   /** Login URL */
   private readonly url: string;
 
@@ -23,46 +24,40 @@ implements AuthenticationProvider {
     const session: SessionState = { loggedIn: true, userId: userId };
 
     const data = new URLSearchParams({
-      'username': userId,
-      'password': password
+      username: userId,
+      password: password,
     });
 
-    try
-    {
+    try {
       const response = await window.fetch(this.url, {
         method: 'POST',
-        body: data
+        body: data,
       });
 
-      if (response.ok)
-      {
+      if (response.ok) {
         const json = await response.json();
-        if (json.success && json.jwt)
-        {
+        if (json.success && json.jwt) {
           console.log(`Logged in OK`);
           session.jwt = json.jwt;
-          if (Array.isArray(json.caps))
-            session.capabilities = json.caps;
+          if (Array.isArray(json.caps)) session.capabilities = json.caps;
           return session;
-        }
-        else console.error(`Login failed: ${json.error}`);
-      }
-      else
-        console.error(`Login failed: ${response.status} ${response.statusText}`);
-    }
-    catch (e: any)
-    {
+        } else console.error(`Login failed: ${json.error}`);
+      } else
+        console.error(
+          `Login failed: ${response.status} ${response.statusText}`
+        );
+    } catch (e: any) {
       console.error(`Login request failed: ${e}`);
     }
 
     session.loggedIn = false;
-    session.error = "Authentication failed";
+    session.error = 'Authentication failed';
     return session;
   }
 
   /** Log out */
   async logout(session: SessionState) {
-    console.log("Logged out");
+    console.log('Logged out');
     session.loggedIn = false;
   }
 }

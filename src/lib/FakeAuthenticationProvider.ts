@@ -6,7 +6,8 @@ import SessionState from './SessionState';
 
 /** Fake Authentication provider */
 export default class FakeAuthenticationProvider
-implements AuthenticationProvider {
+  implements AuthenticationProvider
+{
   /** Try to log in
    * @returns Session state if successful, error string if not
    */
@@ -15,24 +16,22 @@ implements AuthenticationProvider {
     const session: SessionState = { loggedIn: true, userId: userId };
 
     // POST to URL
-    if (userId === "admin" && password === "admin") {
-      session.userName = "Joe Admin";
-      session.capabilities = [".*"];
-    }
-    else if (userId === "test" && password === "foo") {
-      session.userName = "Test User";
-      session.capabilities = ["^test.*"];
-    }
-    else {
+    if (userId === 'admin' && password === 'admin') {
+      session.userName = 'Joe Admin';
+      session.capabilities = ['.*'];
+    } else if (userId === 'test' && password === 'foo') {
+      session.userName = 'Test User';
+      session.capabilities = ['^test.*'];
+    } else {
       session.loggedIn = false;
-      session.error = "Authentication failed";
+      session.error = 'Authentication failed';
     }
     return session;
   }
 
   /** Log out */
   async logout(session: SessionState) {
-    console.log("Logged out");
+    console.log('Logged out');
     session.loggedIn = false;
   }
 }

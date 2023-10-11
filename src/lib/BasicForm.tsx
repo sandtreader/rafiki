@@ -2,9 +2,18 @@
 
 import { ReactNode, useState, useEffect } from 'react';
 
-import { Button, TextField, Stack, IconButton, Icon,
-         DialogActions, DialogContent, DialogTitle, Typography,
-         FormControlLabel, Switch
+import {
+  Button,
+  TextField,
+  Stack,
+  IconButton,
+  Icon,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Typography,
+  FormControlLabel,
+  Switch,
 } from '@mui/material';
 
 import { FormIntent, FormProps, HasUniqueId } from './Types';
@@ -15,8 +24,8 @@ import ChecklistArrayField from './ChecklistArrayField';
 export enum BasicFormFieldArrayStyle {
   chips = 0,
   table = 1,
-  checklist = 2
-};
+  checklist = 2,
+}
 
 /** Definition of fields we want to show */
 // - note using keyof to ensure that the keys included really are
@@ -24,12 +33,14 @@ export enum BasicFormFieldArrayStyle {
 export interface BasicFormFieldDefinition<T> {
   key: keyof T;
   label: string;
-  lines?: number;  // Number of lines to show (default 1)
+  lines?: number; // Number of lines to show (default 1)
 
   // Custom render function - overrides usual TextField
-  render?: (field: BasicFormFieldDefinition<T>,
-            value: T[keyof T],
-            onChange?: (value: T[keyof T]) => void) => ReactNode;
+  render?: (
+    field: BasicFormFieldDefinition<T>,
+    value: T[keyof T],
+    onChange?: (value: T[keyof T]) => void
+  ) => ReactNode;
 
   // Validation function - run on value before change accepted
   validate?: (value: T[keyof T]) => boolean;
@@ -50,36 +61,39 @@ export interface BasicFormFieldDefinition<T> {
 }
 
 /** Basic form props, parameterised by the type we are displaying */
-export interface BasicFormProps<T> extends FormProps<T>
-{
+export interface BasicFormProps<T> extends FormProps<T> {
   onDelete?: (item: T) => void;
   onSave?: (item: T, oldItem: T) => void;
   fields?: BasicFormFieldDefinition<T>[];
   getTitle?: (item: T) => string;
-};
+}
 
 /** React generic detail form component */
-export default function BasicForm<T>(
-  { intent, item, onClose, onDelete, onSave, fields, getTitle }:
-  BasicFormProps<T>)
-{
-  const [editable, setEditable] =
-    useState(intent === FormIntent.Edit
-          || intent === FormIntent.Create);
-  const [itemState, setItemState] = useState<T>({...item});
-  const [allItemsForField, setAllItemsForField] =
-    useState<{ [id: string]: HasUniqueId[] }>({});
+export default function BasicForm<T>({
+  intent,
+  item,
+  onClose,
+  onDelete,
+  onSave,
+  fields,
+  getTitle,
+}: BasicFormProps<T>) {
+  const [editable, setEditable] = useState(
+    intent === FormIntent.Edit || intent === FormIntent.Create
+  );
+  const [itemState, setItemState] = useState<T>({ ...item });
+  const [allItemsForField, setAllItemsForField] = useState<{
+    [id: string]: HasUniqueId[];
+  }>({});
 
   // Pre-format any fields that need it
   useEffect(() => {
-    for(const field of fields || [])
-    {
-      if (field.format)
-      {
+    for (const field of fields || []) {
+      if (field.format) {
         const formatted = field.format(item[field.key]);
         setItemState((prevState: T) => ({
           ...prevState,
-          [field.key]: formatted
+          [field.key]: formatted,
         }));
       }
     }
@@ -89,19 +103,16 @@ export default function BasicForm<T>(
   // note this can be async
   useEffect(() => {
     const getAllItems = async () => {
-      for(const field of fields || [])
-      {
-        if (field.arrayItems)
-        {
+      for (const field of fields || []) {
+        if (field.arrayItems) {
           let allItems: HasUniqueId[];
-          if (typeof field.arrayItems === "function")
+          if (typeof field.arrayItems === 'function')
             allItems = await field.arrayItems();
-          else
-            allItems = field.arrayItems;
+          else allItems = field.arrayItems;
 
-          setAllItemsForField(prevState => ({
+          setAllItemsForField((prevState) => ({
             ...prevState,
-            [field.key]: allItems
+            [field.key]: allItems,
           }));
         }
       }
@@ -114,9 +125,8 @@ export default function BasicForm<T>(
   const save = async () => {
     // Anything changed?
     let changed = false;
-    for(const field of fields || [])
-      if (itemState[field.key] !== item[field.key])
-      {
+    for (const field of fields || [])
+      if (itemState[field.key] !== item[field.key]) {
         changed = true;
         break;
       }
@@ -126,7 +136,7 @@ export default function BasicForm<T>(
   };
 
   const reset = () => {
-    setItemState({...item});
+    setItemState({ ...item });
   };
 
   // Delete the whole item and close
@@ -136,157 +146,169 @@ export default function BasicForm<T>(
   };
 
   // HOF onchange for a particular field
-  const onChangeForField = (field: BasicFormFieldDefinition<T>) =>
-    (value: T[keyof T]) => {
+  const onChangeForField =
+    (field: BasicFormFieldDefinition<T>) => (value: T[keyof T]) => {
       if (editable && (!field.validate || field.validate(value)))
         setItemState((prevState: T) => ({
           ...prevState,
-          [field.key]: value
+          [field.key]: value,
         }));
     };
 
   // Delete an array item in the given value
-  const deleteArrayItem =
-    (field: BasicFormFieldDefinition<T>, arrayItem: HasUniqueId) => {
-      setItemState((prevState: T) => ({
-        ...prevState,
-        [field.key]: (prevState[field.key] as HasUniqueId[])
-          .filter(ai => ai.id !== arrayItem.id)
-      }));
-    };
+  const deleteArrayItem = (
+    field: BasicFormFieldDefinition<T>,
+    arrayItem: HasUniqueId
+  ) => {
+    setItemState((prevState: T) => ({
+      ...prevState,
+      [field.key]: (prevState[field.key] as HasUniqueId[]).filter(
+        (ai) => ai.id !== arrayItem.id
+      ),
+    }));
+  };
 
   // Add an array item
-  const addArrayItem =
-    (field: BasicFormFieldDefinition<T>, arrayItem: HasUniqueId) => {
-      setItemState((prevState: T) => ({
-        ...prevState,
-        [field.key]: (prevState[field.key] as HasUniqueId[]).concat([arrayItem])
-      }));
-    };
+  const addArrayItem = (
+    field: BasicFormFieldDefinition<T>,
+    arrayItem: HasUniqueId
+  ) => {
+    setItemState((prevState: T) => ({
+      ...prevState,
+      [field.key]: (prevState[field.key] as HasUniqueId[]).concat([arrayItem]),
+    }));
+  };
 
   return (
     <>
       <Stack direction="row" justifyContent="space-between">
-        {
-          getTitle &&
-          <DialogTitle>{ getTitle(item) }</DialogTitle>
-        }
+        {getTitle && <DialogTitle>{getTitle(item)}</DialogTitle>}
         <Stack direction="row">
-          {
-            !editable && intent === FormIntent.ViewWithEdit &&
-            <IconButton aria-label="edit" size="large"
-                        onClick={ _ => setEditable(true) }>
+          {!editable && intent === FormIntent.ViewWithEdit && (
+            <IconButton
+              aria-label="edit"
+              size="large"
+              onClick={(_) => setEditable(true)}
+            >
               <Icon>edit</Icon>
             </IconButton>
-          }
-          {
-            intent !== FormIntent.View && onDelete &&
-            <IconButton aria-label="delete" size="large"
-                        onClick={ deleteItem }>
+          )}
+          {intent !== FormIntent.View && onDelete && (
+            <IconButton aria-label="delete" size="large" onClick={deleteItem}>
               <Icon>delete</Icon>
             </IconButton>
-          }
+          )}
         </Stack>
       </Stack>
 
       <DialogContent>
         <Stack direction="column" spacing={2}>
-          {
-            fields?.map( field => {
-              const value = itemState[field.key];
+          {fields?.map((field) => {
+            const value = itemState[field.key];
 
-              // Custom render?
-              if (field.render)
-                return field.render(field, value, onChangeForField(field))
+            // Custom render?
+            if (field.render)
+              return field.render(field, value, onChangeForField(field));
 
-              // Boolean?
-              if (typeof value == "boolean")
-              {
-                return <FormControlLabel
-                         control={
-                           <Switch checked={value}
-                                   onChange={
-                                   e => onChangeForField(field)
-                                   (e.target.checked as T[keyof T])
-                                   }
-                           />}
-                         label={field.label} labelPlacement="end" />;
+            // Boolean?
+            if (typeof value == 'boolean') {
+              return (
+                <FormControlLabel
+                  control={
+                    <Switch
+                      checked={value}
+                      onChange={(e) =>
+                        onChangeForField(field)(e.target.checked as T[keyof T])
+                      }
+                    />
+                  }
+                  label={field.label}
+                  labelPlacement="end"
+                />
+              );
+            }
+
+            // Array?
+            if (field.arrayItems) {
+              const items = value as HasUniqueId[];
+              const allItems = allItemsForField[String(field.key)];
+
+              switch (field.arrayStyle) {
+                case undefined:
+                case BasicFormFieldArrayStyle.chips:
+                  return (
+                    <>
+                      <Typography variant="h6">{field.label}</Typography>
+                      <ChipArrayField
+                        field={field}
+                        items={items}
+                        allItems={allItems}
+                        editable={editable}
+                        deleteItem={deleteArrayItem}
+                        addItem={addArrayItem}
+                      />
+                    </>
+                  );
+
+                case BasicFormFieldArrayStyle.table:
+                  return (
+                    <>
+                      <Typography variant="h6">{field.label}</Typography>
+                      <TableArrayField
+                        field={field}
+                        items={items}
+                        allItems={allItems}
+                        editable={editable}
+                        deleteItem={deleteArrayItem}
+                        addItem={addArrayItem}
+                      />
+                    </>
+                  );
+
+                case BasicFormFieldArrayStyle.checklist:
+                  return (
+                    <>
+                      <Typography variant="h6">{field.label}</Typography>
+                      <ChecklistArrayField
+                        field={field}
+                        items={items}
+                        allItems={allItems}
+                        editable={editable}
+                        deleteItem={deleteArrayItem}
+                        addItem={addArrayItem}
+                      />
+                    </>
+                  );
               }
+            }
 
-              // Array?
-              if (field.arrayItems)
-              {
-                const items = (value as HasUniqueId[]);
-                const allItems = allItemsForField[String(field.key)];
-
-                switch (field.arrayStyle)
-                {
-                  case undefined:
-                  case BasicFormFieldArrayStyle.chips:
-                  return <>
-                    <Typography variant="h6">{field.label}</Typography>
-                    <ChipArrayField field={field} items={items}
-                                    allItems={allItems}
-                                    editable={editable}
-                                    deleteItem={deleteArrayItem}
-                                    addItem={addArrayItem}/>
-                  </>;
-
-                  case BasicFormFieldArrayStyle.table:
-                  return <>
-                    <Typography variant="h6">{field.label}</Typography>
-                    <TableArrayField field={field} items={items}
-                                     allItems={allItems}
-                                     editable={editable}
-                                     deleteItem={deleteArrayItem}
-                                     addItem={addArrayItem}/>
-                  </>
-
-                  case BasicFormFieldArrayStyle.checklist:
-                  return <>
-                    <Typography variant="h6">{field.label}</Typography>
-                    <ChecklistArrayField field={field} items={items}
-                                         allItems={allItems}
-                                         editable={editable}
-                                         deleteItem={deleteArrayItem}
-                                         addItem={addArrayItem}/>
-                  </>
-
+            // Default to text field
+            return (
+              <TextField
+                key={String(field.key)}
+                label={field.label}
+                value={value}
+                multiline={field.lines !== undefined && field.lines > 1}
+                minRows={field.lines}
+                onChange={(e) =>
+                  onChangeForField(field)(e.target.value as T[keyof T])
                 }
-              }
-
-              // Default to text field
-              return <TextField key={String(field.key)}
-                                label={field.label} value={value}
-                                multiline={field.lines !== undefined &&
-                                           field.lines > 1}
-                                minRows={field.lines}
-                                onChange={ e => onChangeForField(field)
-                                (e.target.value as T[keyof T]) }
               />
-            })
-          }
+            );
+          })}
         </Stack>
       </DialogContent>
 
       <DialogActions>
-        {
-          editable && onClose &&
-          <Button onClick={ _ => onClose(false) }>Cancel</Button>
-        }
-        {
-          editable && !onClose &&
-          <Button onClick={ reset }>Reset</Button>
-        }
-        {
-          editable &&
-          <Button onClick={ save }>Save</Button>
-        }
-        {
-          !editable && onClose &&
-          <Button onClick={ _ => onClose(false) }>Close</Button>
-        }
+        {editable && onClose && (
+          <Button onClick={(_) => onClose(false)}>Cancel</Button>
+        )}
+        {editable && !onClose && <Button onClick={reset}>Reset</Button>}
+        {editable && <Button onClick={save}>Save</Button>}
+        {!editable && onClose && (
+          <Button onClick={(_) => onClose(false)}>Close</Button>
+        )}
       </DialogActions>
     </>
   );
-};
+}

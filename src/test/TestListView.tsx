@@ -19,8 +19,11 @@ const testData: TestData[] = [
 
 const columns: ListViewColumnDefinition<TestData>[] = [
   { key: 'name', label: 'Name', sort: true },
-  { key: 'age', label: 'Age',
-    render: (item) => item.age > 30?"Over 30":item.age },
+  {
+    key: 'age',
+    label: 'Age',
+    render: (item) => (item.age > 30 ? 'Over 30' : item.age),
+  },
   { key: 'email', label: 'Email' },
 ];
 
@@ -37,7 +40,7 @@ const TestListView: React.FunctionComponent = () => {
     console.log('Create');
   };
 
-  const extras = [ <Button variant="outlined">Extra</Button> ];
+  const extras = [<Button variant="outlined">Extra</Button>];
 
   return (
     <div>
@@ -47,14 +50,14 @@ const TestListView: React.FunctionComponent = () => {
         searchColumns={['name', 'age']}
         onCreate={handleCreate}
         headerExtras={extras}
-        >
+      >
         {(filteredItems: TestData[]) => (
           <ListView<TestData>
             items={filteredItems}
             onSelect={handleSelect}
             onDelete={handleDelete}
             columns={columns}
-            />
+          />
         )}
       </FilteredView>
     </div>

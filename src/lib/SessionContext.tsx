@@ -1,5 +1,5 @@
-import { createContext, useContext, ReactNode } from "react";
-import SessionState from "./SessionState";
+import { createContext, useContext, ReactNode } from 'react';
+import SessionState from './SessionState';
 
 interface SessionContextType {
   session: SessionState;
@@ -12,12 +12,16 @@ interface SessionContextProviderProps {
   children: ReactNode;
 }
 
-export const SessionContextProvider = (
-  { session, children }: SessionContextProviderProps) => {
+export const SessionContextProvider = ({
+  session,
+  children,
+}: SessionContextProviderProps) => {
   return (
-    <SessionContext.Provider value={{
-      session: session
-    }}>
+    <SessionContext.Provider
+      value={{
+        session: session,
+      }}
+    >
       {children}
     </SessionContext.Provider>
   );
@@ -26,7 +30,9 @@ export const SessionContextProvider = (
 export const useSessionContext = () => {
   const context = useContext(SessionContext);
   if (!context) {
-    throw new Error("useSessionContext must be used within a SessionContextProvider");
+    throw new Error(
+      'useSessionContext must be used within a SessionContextProvider'
+    );
   }
   return context;
 };

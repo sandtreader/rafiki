@@ -7,9 +7,18 @@ import AuthenticationProvider from './AuthenticationProvider';
 import SessionState from './SessionState';
 import { SessionContextProvider } from './SessionContext';
 
-import { Container, Box, Drawer, TextField, Button,
-         Stack, Alert, Typography,
-         AppBar, Toolbar } from '@mui/material';
+import {
+  Container,
+  Box,
+  Drawer,
+  TextField,
+  Button,
+  Stack,
+  Alert,
+  Typography,
+  AppBar,
+  Toolbar,
+} from '@mui/material';
 
 type FrameworkProps = {
   authProvider: AuthenticationProvider;
@@ -23,12 +32,12 @@ const Framework: React.FunctionComponent<FrameworkProps> = ({
   authProvider,
   menuProvider,
   title,
-  onSessionChange
+  onSessionChange,
 }) => {
   // Session state
   const [session, setSession] = useState<SessionState>();
-  const [userId, setUserId] = useState("");
-  const [password, setPassword] = useState("");
+  const [userId, setUserId] = useState('');
+  const [password, setPassword] = useState('');
 
   // Menu structure and state
   const [menu, setMenu] = useState<MenuStructure>();
@@ -36,19 +45,19 @@ const Framework: React.FunctionComponent<FrameworkProps> = ({
 
   // Init only - load full menu structure
   useEffect(() => {
-    console.log("Create menu");
+    console.log('Create menu');
     const menu = menuProvider.getMenu();
     setMenu(menu);
   }, [menuProvider]);
 
   // On session change, refilter capabilities
   useEffect(() => {
-    setMenu(m => {
-      console.log("Filter menu");
+    setMenu((m) => {
+      console.log('Filter menu');
       const newMenu = MenuStructure.fromLiteral(m);
       newMenu.filterWithCapabilities(session?.capabilities || []);
       return newMenu;
-    })
+    });
   }, [session?.capabilities]);
 
   // Actions
@@ -57,64 +66,92 @@ const Framework: React.FunctionComponent<FrameworkProps> = ({
     const session = await authProvider?.login(userId, password);
     setSession(session);
     if (onSessionChange) onSessionChange(session);
-  }
+  };
 
   const logOut = async () => {
-    session && await authProvider?.logout(session);
+    session && (await authProvider?.logout(session));
     setSession({ loggedIn: false });
     setPassword('');
     onSessionChange && session && onSessionChange(session);
-  }
+  };
 
   return (
     <div className="Framework">
-      <AppBar position='fixed'
-              sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
+      <AppBar
+        position="fixed"
+        sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
+      >
         <Toolbar>
-          <Typography variant='h4'>{ title }</Typography>
+          <Typography variant="h4">{title}</Typography>
         </Toolbar>
       </AppBar>
       <Toolbar />
       {
         // Login screen
-        !session?.loggedIn &&
-        <Container maxWidth='sm' sx={{ marginTop: 5 }}>
-          <form onSubmit={(e) => { submitLogin(); e.preventDefault(); }}>
-            <Stack spacing={2}>
-              <TextField value={userId}
-                         onChange={(e) => setUserId(e.target.value)}
-                         label="User name" required />
-              <TextField value={password}
-                         onChange={(e) => setPassword(e.target.value)}
-                         id="password" label="Password"
-                         type="Password" required />
-              <Button type="submit" variant="contained">Log in</Button>
-              {session?.error && <Alert severity='error'>{session.error}</Alert>}
-            </Stack>
-          </form>
-        </Container>
+        !session?.loggedIn && (
+          <Container maxWidth="sm" sx={{ marginTop: 5 }}>
+            <form
+              onSubmit={(e) => {
+                submitLogin();
+                e.preventDefault();
+              }}
+            >
+              <Stack spacing={2}>
+                <TextField
+                  value={userId}
+                  onChange={(e) => setUserId(e.target.value)}
+                  label="User name"
+                  required
+                />
+                <TextField
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  id="password"
+                  label="Password"
+                  type="Password"
+                  required
+                />
+                <Button type="submit" variant="contained">
+                  Log in
+                </Button>
+                {session?.error && (
+                  <Alert severity="error">{session.error}</Alert>
+                )}
+              </Stack>
+            </form>
+          </Container>
+        )
       }
 
       {
         // Menu and content
-        session?.loggedIn && menu &&
-        <SessionContextProvider session={session}>
-          <Stack direction='row'>
-            <Drawer variant='permanent' sx={{ width: 280 }}>
-              <Box sx={{width: 280}}>
-                <Toolbar />
-                <Menu structure={menu} state={menuState}
-                      setState={setMenuState} />
-                <Button variant="contained" sx={{ marginLeft: 2, width: 250 }}
-                        onClick={(e) => logOut()}>Log out</Button>
-              </Box>
-            </Drawer>
-            <Container maxWidth={false}>{menuState.content}</Container>
-          </Stack>
-        </SessionContextProvider>
+        session?.loggedIn && menu && (
+          <SessionContextProvider session={session}>
+            <Stack direction="row">
+              <Drawer variant="permanent" sx={{ width: 280 }}>
+                <Box sx={{ width: 280 }}>
+                  <Toolbar />
+                  <Menu
+                    structure={menu}
+                    state={menuState}
+                    setState={setMenuState}
+                  />
+                  <Button
+                    variant="contained"
+                    sx={{ marginLeft: 2, width: 250 }}
+                    onClick={(e) => logOut()}
+                  >
+                    Log out
+                  </Button>
+                </Box>
+              </Drawer>
+              <Container maxWidth={false}>{menuState.content}</Container>
+            </Stack>
+          </SessionContextProvider>
+        )
       }
-    </div >
+    </div>
   );
-}
+};
 
 export default Framework;

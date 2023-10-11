@@ -12,7 +12,7 @@ import SessionState from '../lib/SessionState';
 const authProvider = new FakeAuthenticationProvider();
 //  new JWTAuthenticationProvider("http://localhost:7081/login");
 
-const dynamicMenuModules = [ "DynamicMenuModule" ];
+const dynamicMenuModules = ['DynamicMenuModule'];
 
 // Top-level App
 function App() {
@@ -22,14 +22,13 @@ function App() {
   useEffect(() => {
     (async () => {
       // Create root menu
-      const rootMenu = new MenuStructure("root", "root");
+      const rootMenu = new MenuStructure('root', 'root');
       const menuProvider = new StaticMenuProvider(rootMenu);
 
       // Example of dynamic menu loading
       // Note you must do this at the App top level because WebPack
       // does tricks at compile time to work out what can be loaded
-      for(const moduleName of dynamicMenuModules)
-      {
+      for (const moduleName of dynamicMenuModules) {
         const childMenuModule = await import(`./${moduleName}`);
         // We push their top-level export down a level to merge
         const menuLiteral = { children: [childMenuModule.default] };
@@ -45,16 +44,19 @@ function App() {
   }, []);
 
   const onSessionChange = (session: SessionState) => {
-    console.log("New session "+JSON.stringify(session));
-  }
+    console.log('New session ' + JSON.stringify(session));
+  };
 
   return (
     <div className="App">
-      { menus &&
-        <Framework authProvider={authProvider} menuProvider={menus}
-                   title="Rafiki Administration Framework Test"
-                   onSessionChange={onSessionChange} />
-      }
+      {menus && (
+        <Framework
+          authProvider={authProvider}
+          menuProvider={menus}
+          title="Rafiki Administration Framework Test"
+          onSessionChange={onSessionChange}
+        />
+      )}
     </div>
   );
 }

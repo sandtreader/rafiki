@@ -93,8 +93,7 @@ export default class MenuStructure {
           }
         }
 
-        if (!found)
-        {
+        if (!found) {
           this.hidden = true;
           return; // Lasy AND
         }
@@ -103,7 +102,9 @@ export default class MenuStructure {
 
     // Filter any children too
     if (this.children)
-      this.children.forEach(child => child.filterWithCapabilities(capabilities));
+      this.children.forEach((child) =>
+        child.filterWithCapabilities(capabilities)
+      );
 
     return true;
   }

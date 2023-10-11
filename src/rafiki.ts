@@ -10,9 +10,15 @@ export { default as FakeAuthenticationProvider } from './lib/FakeAuthenticationP
 export type { default as SessionState } from './lib/SessionState';
 export { default as Framework } from './lib/Framework';
 export { type HasUniqueId, FormIntent, type FormProps } from './lib/Types';
-export { default as ListView, type ListViewColumnDefinition } from './lib/ListView';
+export {
+  default as ListView,
+  type ListViewColumnDefinition,
+} from './lib/ListView';
 export { default as FilteredView } from './lib/FilteredView';
-export { default as BasicForm, type BasicFormFieldDefinition,
-         type BasicFormProps, BasicFormFieldArrayStyle }
-  from './lib/BasicForm';
+export {
+  default as BasicForm,
+  type BasicFormFieldDefinition,
+  type BasicFormProps,
+  BasicFormFieldArrayStyle,
+} from './lib/BasicForm';
 export { default as ListEditPage } from './lib/ListEditPage';

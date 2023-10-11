@@ -7,8 +7,13 @@ import ListView, { ListViewColumnDefinition } from './ListView';
 import FilteredView from './FilteredView';
 import BasicForm, { BasicFormFieldDefinition } from './BasicForm';
 
-import { TextField, Button,
-         Dialog, DialogTitle, DialogContent, DialogActions
+import {
+  TextField,
+  Button,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
 } from '@mui/material';
 
 /** List edit page props, parameterised by the type we are displaying */
@@ -19,30 +24,36 @@ export interface ListEditPageProps<T extends HasUniqueId> {
   saveItem: (item: T, oldItem: T) => Promise<void>;
   deleteItem: (item: T) => Promise<void>;
   columns: ListViewColumnDefinition<T>[];
-  searchColumns?: (keyof T)[];  // Properties to search in, or all
+  searchColumns?: (keyof T)[]; // Properties to search in, or all
   fields?: BasicFormFieldDefinition<T>[];
   getTitle?: (item: T) => string;
-  form?: ComponentType<FormProps<T>>  // Optional custom form
-};
+  form?: ComponentType<FormProps<T>>; // Optional custom form
+}
 
 /** List edit page - a full management page with a filtered list view,
     edit and create forms */
-export default function ListEditPage<T extends HasUniqueId>(
-  { typeName, fetchItems, createItem, saveItem, deleteItem, columns,
-    searchColumns, fields, getTitle, form }:
-  ListEditPageProps<T>)
-{
+export default function ListEditPage<T extends HasUniqueId>({
+  typeName,
+  fetchItems,
+  createItem,
+  saveItem,
+  deleteItem,
+  columns,
+  searchColumns,
+  fields,
+  getTitle,
+  form,
+}: ListEditPageProps<T>) {
   const [items, setItems] = useState<Array<T>>([]);
-  const [selectedItem, setSelectedItem] = useState<T|null>(null);
+  const [selectedItem, setSelectedItem] = useState<T | null>(null);
   const [creating, setCreating] = useState(false);
-  const [createId, setCreateId] = useState("");
+  const [createId, setCreateId] = useState('');
 
   // Update items
-  const fetch = useCallback(async () =>
-    {
-      const items = await fetchItems();
-      setItems(items);
-    }, []);
+  const fetch = useCallback(async () => {
+    const items = await fetchItems();
+    setItems(items);
+  }, []);
 
   // Fetch items at start
   useEffect(() => {
@@ -54,14 +65,14 @@ export default function ListEditPage<T extends HasUniqueId>(
     const item = await createItem(createId);
     fetch();
     setSelectedItem(item);
-    setCreateId("");
-  }
+    setCreateId('');
+  };
 
   // Save changes
   const onSave = async (item: T, oldItem: T) => {
     await saveItem(item, oldItem);
     fetch();
-  }
+  };
 
   // Delete a item
   const onDelete = async (item: T) => {
@@ -77,15 +88,17 @@ export default function ListEditPage<T extends HasUniqueId>(
   };
 
   // Use aliases to avoid JSX/generics car crash
-  const ItemForm = form?form:BasicForm<T>; // Option for custom type
+  const ItemForm = form ? form : BasicForm<T>; // Option for custom type
   const ItemFilteredView = FilteredView<T>;
   const ItemListView = ListView<T>;
 
   return (
     <>
-      <ItemFilteredView items={items}
-                            searchColumns={searchColumns}
-                            onCreate={ () => setCreating(true) }>
+      <ItemFilteredView
+        items={items}
+        searchColumns={searchColumns}
+        onCreate={() => setCreating(true)}
+      >
         {(filteredItems: T[]) => (
           <ItemListView
             items={filteredItems}
@@ -98,44 +111,73 @@ export default function ListEditPage<T extends HasUniqueId>(
 
       {
         // View/edit form
-        selectedItem &&
-        <Dialog open={true} onClose={ () => onClose(false) }
-                maxWidth="md" fullWidth={true}>
-          <ItemForm
-          intent = {creating?FormIntent.Create:FormIntent.ViewWithEdit}
-          item = {selectedItem}
-          onDelete = {onDelete}
-          onSave = {onSave}
-          onClose = {onClose}
-          fields = {fields}
-          getTitle = { getTitle?getTitle:(item => `${typeName} ${item.id}`) }
+        selectedItem && (
+          <Dialog
+            open={true}
+            onClose={() => onClose(false)}
+            maxWidth="md"
+            fullWidth={true}
+          >
+            <ItemForm
+              intent={creating ? FormIntent.Create : FormIntent.ViewWithEdit}
+              item={selectedItem}
+              onDelete={onDelete}
+              onSave={onSave}
+              onClose={onClose}
+              fields={fields}
+              getTitle={
+                getTitle ? getTitle : (item) => `${typeName} ${item.id}`
+              }
             />
-        </Dialog>
+          </Dialog>
+        )
       }
 
       {
         // Create dialog - needs an ID
-        creating &&
-        <Dialog open={true}
-                onClose= { _ => { setCreating(false); setCreateId(""); } }>
-          <form onSubmit={ e => { e.preventDefault(); onCreate() } }>
-            <DialogTitle>Create a new {typeName}</DialogTitle>
-            <DialogContent>
-              <TextField autoFocus id="id" label={`${typeName} ID`}
-                         fullWidth variant="standard"
-                         value={createId}
-                         onChange={ e => setCreateId(e.target.value) } />
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={ _=>{ setCreating(false); setCreateId(""); }}>
-                Cancel
-              </Button>
-              <Button type="submit" disabled={createId === ""}>Create</Button>
-            </DialogActions>
-          </form>
-        </Dialog>
+        creating && (
+          <Dialog
+            open={true}
+            onClose={(_) => {
+              setCreating(false);
+              setCreateId('');
+            }}
+          >
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                onCreate();
+              }}
+            >
+              <DialogTitle>Create a new {typeName}</DialogTitle>
+              <DialogContent>
+                <TextField
+                  autoFocus
+                  id="id"
+                  label={`${typeName} ID`}
+                  fullWidth
+                  variant="standard"
+                  value={createId}
+                  onChange={(e) => setCreateId(e.target.value)}
+                />
+              </DialogContent>
+              <DialogActions>
+                <Button
+                  onClick={(_) => {
+                    setCreating(false);
+                    setCreateId('');
+                  }}
+                >
+                  Cancel
+                </Button>
+                <Button type="submit" disabled={createId === ''}>
+                  Create
+                </Button>
+              </DialogActions>
+            </form>
+          </Dialog>
+        )
       }
     </>
   );
-};
-
+}

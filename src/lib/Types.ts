@@ -7,20 +7,16 @@ export interface HasUniqueId {
 }
 
 /** Initial intent of a form */
-export enum FormIntent
-{
+export enum FormIntent {
   View,
   ViewWithEdit,
   Edit,
-  Create
-};
+  Create,
+}
 
 /** Generic form props, parameterised by the type we are displaying */
-export type FormProps<T> =
-{
-  intent: FormIntent,
-  item: T,
-  onClose?: (changed: boolean) => void
+export type FormProps<T> = {
+  intent: FormIntent;
+  item: T;
+  onClose?: (changed: boolean) => void;
 };
-
-

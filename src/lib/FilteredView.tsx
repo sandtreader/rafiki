@@ -7,18 +7,21 @@ import { HasUniqueId } from './Types';
 
 interface FilteredViewProps<T extends HasUniqueId> {
   items: T[];
-  children: (filteredItems: T[]) => ReactNode;  // Display function
-  searchColumns?: (keyof T)[];  // Properties to search in, or all
-  onCreate?: () => void;        // Optional create function
-  headerExtras?: Array<ReactNode>;  // Optional extra controls for header
+  children: (filteredItems: T[]) => ReactNode; // Display function
+  searchColumns?: (keyof T)[]; // Properties to search in, or all
+  onCreate?: () => void; // Optional create function
+  headerExtras?: Array<ReactNode>; // Optional extra controls for header
 }
 
 /** Filtered view - offers a search filter box to filter items displayed
    by its child */
-export default function FilteredView<T extends HasUniqueId>(
-  { items, children, searchColumns, onCreate, headerExtras }:
-    FilteredViewProps<T>)
-{
+export default function FilteredView<T extends HasUniqueId>({
+  items,
+  children,
+  searchColumns,
+  onCreate,
+  headerExtras,
+}: FilteredViewProps<T>) {
   const [filter, setFilter] = useState('');
 
   const isNumeric = (value: any) => {
@@ -31,8 +34,7 @@ export default function FilteredView<T extends HasUniqueId>(
 
     if (isNumeric(filter) && isNumeric(value))
       return Number(filter) === Number(value);
-    else
-      return lcValue.includes(lcFilter);
+    else return lcValue.includes(lcFilter);
   };
 
   const filterItems = (item: T): boolean => {
@@ -54,9 +56,9 @@ export default function FilteredView<T extends HasUniqueId>(
   return (
     <>
       <Box display="flex" sx={{ margin: '10px 0', alignItems: 'center' }}>
-        {
-          headerExtras?.map(extra => <Box sx={{ m: 1 }}>{extra}</Box>)
-        }
+        {headerExtras?.map((extra) => (
+          <Box sx={{ m: 1 }}>{extra}</Box>
+        ))}
         <Box>
           <TextField
             label="Search"
@@ -64,27 +66,26 @@ export default function FilteredView<T extends HasUniqueId>(
             value={filter}
             onChange={(e) => setFilter(e.target.value)}
           />
-          <IconButton aria-label="clear search" size="large"
-                      onClick={() => setFilter('')}>
+          <IconButton
+            aria-label="clear search"
+            size="large"
+            onClick={() => setFilter('')}
+          >
             <Icon fontSize="inherit">clear</Icon>
           </IconButton>
         </Box>
 
         <Box>
-          { onCreate &&
-            <IconButton aria-label="create" size="large"
-                        onClick={ onCreate }>
+          {onCreate && (
+            <IconButton aria-label="create" size="large" onClick={onCreate}>
               <Icon fontSize="inherit">add</Icon>
             </IconButton>
-          }
+          )}
         </Box>
       </Box>
 
-      { !!filteredItems.length && children(filteredItems) }
-      {
-        !filteredItems.length &&
-        <Alert severity="warning">Nothing found</Alert>
-      }
+      {!!filteredItems.length && children(filteredItems)}
+      {!filteredItems.length && <Alert severity="warning">Nothing found</Alert>}
     </>
   );
 }

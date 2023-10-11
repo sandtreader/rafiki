@@ -1,15 +1,16 @@
 import React, { useState } from 'react';
-import BasicForm, { BasicFormFieldDefinition, BasicFormFieldArrayStyle }
-  from '../lib/BasicForm';
+import BasicForm, {
+  BasicFormFieldDefinition,
+  BasicFormFieldArrayStyle,
+} from '../lib/BasicForm';
 import { FormIntent } from '../lib/Types';
 import { Dialog, TextField } from '@mui/material';
 import SessionState from '../lib/SessionState';
 import { useSessionContext } from '../lib/SessionContext';
 
-type Friend =
-{
-  id: number,
-  name: string
+type Friend = {
+  id: number;
+  name: string;
 };
 
 interface TestData {
@@ -22,86 +23,104 @@ interface TestData {
   friends?: Friend[];
 }
 
-const whiteRabbit: Friend = { id: 2, name: "White Rabbit" };
-const madHatter: Friend = { id: 3, name: "Mad Hatter" };
-const dormouse: Friend = { id: 4, name: "Dormouse" };
-const redQueen: Friend = { id: 5, name: "Red Queen" };
+const whiteRabbit: Friend = { id: 2, name: 'White Rabbit' };
+const madHatter: Friend = { id: 3, name: 'Mad Hatter' };
+const dormouse: Friend = { id: 4, name: 'Dormouse' };
+const redQueen: Friend = { id: 5, name: 'Red Queen' };
 
-const allFriends = [ whiteRabbit, madHatter, dormouse, redQueen ];
+const allFriends = [whiteRabbit, madHatter, dormouse, redQueen];
 
-const testData: TestData =
-  { id: '1', name: 'Alice', age: 7, email: 'alice@wonderland.com',
-    likesBooks: true,
-    notes: "Tendency to fantasy involving white rabbits",
-    friends: [whiteRabbit, dormouse]
-  };
+const testData: TestData = {
+  id: '1',
+  name: 'Alice',
+  age: 7,
+  email: 'alice@wonderland.com',
+  likesBooks: true,
+  notes: 'Tendency to fantasy involving white rabbits',
+  friends: [whiteRabbit, dormouse],
+};
 
 const fields: BasicFormFieldDefinition<TestData>[] = [
   { key: 'name', label: 'Name' },
-  { key: 'age', label: 'Age',
-    render: (field, value, onChange) =>
-      <TextField variant="filled" label={field.label} value={value}
-                 onChange={e => onChange?onChange(e.target.value):false} />,
-    validate: (value) => /^([1-9]\d{0,2})?$/.test(String(value))
+  {
+    key: 'age',
+    label: 'Age',
+    render: (field, value, onChange) => (
+      <TextField
+        variant="filled"
+        label={field.label}
+        value={value}
+        onChange={(e) => (onChange ? onChange(e.target.value) : false)}
+      />
+    ),
+    validate: (value) => /^([1-9]\d{0,2})?$/.test(String(value)),
   },
   { key: 'email', label: 'Email' },
   { key: 'likesBooks', label: 'Likes books' },
   { key: 'notes', label: 'Notes', lines: 10 },
-  { key: 'friends', label: 'Friends',
+  {
+    key: 'friends',
+    label: 'Friends',
     arrayItems: () => Promise.resolve(allFriends),
     arrayStyle: BasicFormFieldArrayStyle.checklist,
-    getItemName: item => (item as Friend).name
-  }
+    getItemName: (item) => (item as Friend).name,
+  },
 ];
 
 export interface TestBasicFormProps {
   dialog?: boolean;
-};
+}
 
-const TestBasicForm: React.FunctionComponent<TestBasicFormProps> =
-  ({ dialog }) => {
-    const [open, setOpen] = useState(true);
-    const session = useSessionContext().session;
+const TestBasicForm: React.FunctionComponent<TestBasicFormProps> = ({
+  dialog,
+}) => {
+  const [open, setOpen] = useState(true);
+  const session = useSessionContext().session;
 
-    const handleClose = (changed: boolean) => {
-      console.log(`Closing: ${changed?"changed":"unchanged"}`);
-      setOpen(false);
-    };
-
-    const handleDelete = (item: TestData) => {
-      console.log('Delete:', item);
-    };
-
-    const handleSave = (item: TestData, oldItem: TestData) => {
-      console.log('Save:', item);
-      console.log('Old:', oldItem);
-    };
-
-    const form = () =>
-      <BasicForm<TestData>
-        intent={FormIntent.ViewWithEdit}
-        item={testData}
-        onClose={dialog?handleClose:undefined}
-        onDelete={handleDelete}
-        onSave={handleSave}
-        fields={fields}
-        getTitle={ item => `Test: ${item.id} ${item.name}` }
-        />;
-
-    return (
-      <div>
-        <h1>Test Basic Form {dialog?"dialog":""}</h1>
-        <p>User: {session.userId}</p>
-        {
-          dialog?
-          <Dialog open={open} onClose={handleClose}
-                  maxWidth="md" fullWidth={true}>
-            { form() }
-          </Dialog>
-          : form()
-        }
-      </div>
-    );
+  const handleClose = (changed: boolean) => {
+    console.log(`Closing: ${changed ? 'changed' : 'unchanged'}`);
+    setOpen(false);
   };
+
+  const handleDelete = (item: TestData) => {
+    console.log('Delete:', item);
+  };
+
+  const handleSave = (item: TestData, oldItem: TestData) => {
+    console.log('Save:', item);
+    console.log('Old:', oldItem);
+  };
+
+  const form = () => (
+    <BasicForm<TestData>
+      intent={FormIntent.ViewWithEdit}
+      item={testData}
+      onClose={dialog ? handleClose : undefined}
+      onDelete={handleDelete}
+      onSave={handleSave}
+      fields={fields}
+      getTitle={(item) => `Test: ${item.id} ${item.name}`}
+    />
+  );
+
+  return (
+    <div>
+      <h1>Test Basic Form {dialog ? 'dialog' : ''}</h1>
+      <p>User: {session.userId}</p>
+      {dialog ? (
+        <Dialog
+          open={open}
+          onClose={handleClose}
+          maxWidth="md"
+          fullWidth={true}
+        >
+          {form()}
+        </Dialog>
+      ) : (
+        form()
+      )}
+    </div>
+  );
+};
 
 export default TestBasicForm;
