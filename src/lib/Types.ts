@@ -19,4 +19,6 @@ export type FormProps<T> = {
   intent: FormIntent;
   item: T;
   onClose?: (changed: boolean) => void;
+  onDelete?: (item: T) => void;
+  onSave?: (item: T, oldItem: T) => void;
 };

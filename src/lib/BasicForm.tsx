@@ -62,8 +62,6 @@ export interface BasicFormFieldDefinition<T> {
 
 /** Basic form props, parameterised by the type we are displaying */
 export interface BasicFormProps<T> extends FormProps<T> {
-  onDelete?: (item: T) => void;
-  onSave?: (item: T, oldItem: T) => void;
   fields?: BasicFormFieldDefinition<T>[];
   getTitle?: (item: T) => string;
 }
