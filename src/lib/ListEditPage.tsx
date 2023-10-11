@@ -20,9 +20,9 @@ import {
 export interface ListEditPageProps<T extends HasUniqueId> {
   typeName: string;
   fetchItems: () => Promise<T[]>;
-  createItem: (id: string) => Promise<T>;
-  saveItem: (item: T, oldItem: T) => Promise<void>;
-  deleteItem: (item: T) => Promise<void>;
+  createItem?: (id: string) => Promise<T>;
+  saveItem?: (item: T, oldItem: T) => Promise<void>;
+  deleteItem?: (item: T) => Promise<void>;
   columns: ListViewColumnDefinition<T>[];
   searchColumns?: (keyof T)[]; // Properties to search in, or all
   fields?: BasicFormFieldDefinition<T>[];
@@ -62,6 +62,7 @@ export default function ListEditPage<T extends HasUniqueId>({
 
   // Create a item
   const onCreate = async () => {
+    if (!createItem) return;
     const item = await createItem(createId);
     fetch();
     setSelectedItem(item);
@@ -70,12 +71,14 @@ export default function ListEditPage<T extends HasUniqueId>({
 
   // Save changes
   const onSave = async (item: T, oldItem: T) => {
+    if (!saveItem) return;
     await saveItem(item, oldItem);
     fetch();
   };
 
   // Delete a item
   const onDelete = async (item: T) => {
+    if (!deleteItem) return;
     await deleteItem(item);
     fetch();
   };
@@ -97,13 +100,13 @@ export default function ListEditPage<T extends HasUniqueId>({
       <ItemFilteredView
         items={items}
         searchColumns={searchColumns}
-        onCreate={() => setCreating(true)}
+        onCreate={createItem ? () => setCreating(true) : undefined}
       >
         {(filteredItems: T[]) => (
           <ItemListView
             items={filteredItems}
             onSelect={setSelectedItem}
-            onDelete={onDelete}
+            onDelete={deleteItem?onDelete:undefined}
             columns={columns}
           />
         )}
@@ -119,10 +122,12 @@ export default function ListEditPage<T extends HasUniqueId>({
             fullWidth={true}
           >
             <ItemForm
-              intent={creating ? FormIntent.Create : FormIntent.ViewWithEdit}
+              intent={creating ? FormIntent.Create :
+                      (saveItem ? FormIntent.ViewWithEdit :
+                       FormIntent.View)}
               item={selectedItem}
-              onDelete={onDelete}
-              onSave={onSave}
+              onDelete={deleteItem?onDelete:undefined}
+              onSave={saveItem?onSave:undefined}
               onClose={onClose}
               fields={fields}
               getTitle={

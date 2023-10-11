@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import FilteredView from '../lib/FilteredView';
 import ListView, { ListViewColumnDefinition } from '../lib/ListView';
-import { Button } from '@mui/material';
+import { Button, FormControlLabel, Switch } from '@mui/material';
 
 interface TestData {
   id: string;
@@ -28,6 +28,8 @@ const columns: ListViewColumnDefinition<TestData>[] = [
 ];
 
 const TestListView: React.FunctionComponent = () => {
+  const [editable, setEditable] = useState(true);
+
   const handleSelect = (item: TestData) => {
     console.log('Select:', item);
   };
@@ -45,17 +47,28 @@ const TestListView: React.FunctionComponent = () => {
   return (
     <div>
       <h1>Test Filtered List View</h1>
+      <FormControlLabel
+        control={
+          <Switch
+            checked={editable}
+            onChange={(e) => setEditable(e.target.checked) }
+          />
+        }
+        label="Editable"
+        labelPlacement="end"
+      />
+
       <FilteredView<TestData>
         items={testData}
         searchColumns={['name', 'age']}
-        onCreate={handleCreate}
+        onCreate={editable?handleCreate:undefined}
         headerExtras={extras}
       >
         {(filteredItems: TestData[]) => (
           <ListView<TestData>
             items={filteredItems}
             onSelect={handleSelect}
-            onDelete={handleDelete}
+            onDelete={editable?handleDelete:undefined}
             columns={columns}
           />
         )}

@@ -4,7 +4,7 @@ import BasicForm, {
   BasicFormFieldArrayStyle,
 } from '../lib/BasicForm';
 import { FormIntent } from '../lib/Types';
-import { Dialog, TextField } from '@mui/material';
+import { Dialog, TextField, FormControlLabel, Switch } from '@mui/material';
 import SessionState from '../lib/SessionState';
 import { useSessionContext } from '../lib/SessionContext';
 
@@ -76,6 +76,7 @@ const TestBasicForm: React.FunctionComponent<TestBasicFormProps> = ({
 }) => {
   const [open, setOpen] = useState(true);
   const session = useSessionContext().session;
+  const [editable, setEditable] = useState(true);
 
   const handleClose = (changed: boolean) => {
     console.log(`Closing: ${changed ? 'changed' : 'unchanged'}`);
@@ -93,11 +94,11 @@ const TestBasicForm: React.FunctionComponent<TestBasicFormProps> = ({
 
   const form = () => (
     <BasicForm<TestData>
-      intent={FormIntent.ViewWithEdit}
+      intent={editable?FormIntent.ViewWithEdit:FormIntent.Edit}
       item={testData}
       onClose={dialog ? handleClose : undefined}
-      onDelete={handleDelete}
-      onSave={handleSave}
+      onDelete={editable?handleDelete:undefined}
+      onSave={editable?handleSave:undefined}
       fields={fields}
       getTitle={(item) => `Test: ${item.id} ${item.name}`}
     />
@@ -107,6 +108,16 @@ const TestBasicForm: React.FunctionComponent<TestBasicFormProps> = ({
     <div>
       <h1>Test Basic Form {dialog ? 'dialog' : ''}</h1>
       <p>User: {session.userId}</p>
+      <FormControlLabel
+        control={
+          <Switch
+            checked={editable}
+            onChange={(e) => setEditable(e.target.checked) }
+          />
+        }
+        label="Editable"
+        labelPlacement="end"
+      />
       {dialog ? (
         <Dialog
           open={open}

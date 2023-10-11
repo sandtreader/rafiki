@@ -28,7 +28,7 @@ export interface ListViewColumnDefinition<T> {
 export interface ListViewProps<T extends HasUniqueId> {
   items: T[];
   onSelect: (item: T) => void;
-  onDelete: (item: T) => void;
+  onDelete?: (item: T) => void;
   columns: ListViewColumnDefinition<T>[];
 }
 
@@ -55,7 +55,7 @@ export default function ListView<T extends HasUniqueId>({
             {columns.map((column) => (
               <TableCell key={String(column.key)}>{column.label}</TableCell>
             ))}
-            <TableCell key="action">Action</TableCell>
+            { onDelete && <TableCell key="action">Action</TableCell> }
           </TableRow>
         </TableHead>
         <TableBody>
@@ -65,22 +65,25 @@ export default function ListView<T extends HasUniqueId>({
                 {columns.map((column, i) => (
                   <TableCell key={i}>
                     {column.render
-                      ? column.render(item)
-                      : String(item[column.key])}
+                    ? column.render(item)
+                    : String(item[column.key])}
                   </TableCell>
                 ))}
-                <TableCell>
-                  <IconButton
-                    aria-label="delete"
-                    size="large"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onDelete(item);
-                    }}
-                  >
-                    <Icon>delete</Icon>
-                  </IconButton>
-                </TableCell>
+                {
+                  onDelete &&
+                  <TableCell>
+                    <IconButton
+                      aria-label="delete"
+                      size="large"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onDelete(item);
+                      }}
+                    >
+                      <Icon>delete</Icon>
+                    </IconButton>
+                  </TableCell>
+                }
               </TableRow>
             );
           })}
