@@ -41,7 +41,8 @@ implements AuthenticationProvider {
         {
           console.log(`Logged in OK`);
           session.jwt = json.jwt;
-          session.capabilities = [".*"];  // !!! For now
+          if (Array.isArray(json.caps))
+            session.capabilities = json.caps;
           return session;
         }
         else console.error(`Login failed: ${json.error}`);
