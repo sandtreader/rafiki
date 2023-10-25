@@ -5,7 +5,6 @@ import BasicForm, {
 } from '../lib/BasicForm';
 import { FormIntent } from '../lib/Types';
 import { Dialog, TextField, FormControlLabel, Switch } from '@mui/material';
-import SessionState from '../lib/SessionState';
 import { useSessionContext } from '../lib/SessionContext';
 
 type Friend = {

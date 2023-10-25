@@ -66,6 +66,14 @@ export interface BasicFormProps<T> extends FormProps<T> {
   getTitle?: (item: T) => string;
 }
 
+// Get a clone of an object, retaining its type
+// Note all the setItemStates use this instead of { ... item } otherwise
+// we will lose the type when we call back to onSave
+const clone = (obj: any) => {
+  const clone = Object.create(Object.getPrototypeOf(obj));
+  return Object.assign(clone, obj);
+};
+
 /** React generic detail form component */
 export default function BasicForm<T>({
   intent,
@@ -79,7 +87,7 @@ export default function BasicForm<T>({
   const [editable, setEditable] = useState(
     intent === FormIntent.Edit || intent === FormIntent.Create
   );
-  const [itemState, setItemState] = useState<T>({ ...item });
+  const [itemState, setItemState] = useState<T>(clone(item));
   const [allItemsForField, setAllItemsForField] = useState<{
     [id: string]: HasUniqueId[];
   }>({});
@@ -89,10 +97,11 @@ export default function BasicForm<T>({
     for (const field of fields || []) {
       if (field.format) {
         const formatted = field.format(item[field.key]);
-        setItemState((prevState: T) => ({
-          ...prevState,
-          [field.key]: formatted,
-        }));
+        setItemState((prevState: T) => {
+          const newItem = clone(prevState);
+          newItem[field.key] = formatted;
+          return newItem;
+        });
       }
     }
   }, [fields, item]);
@@ -134,7 +143,7 @@ export default function BasicForm<T>({
   };
 
   const reset = () => {
-    setItemState({ ...item });
+    setItemState(clone(item));
   };
 
   // Delete the whole item and close
@@ -147,10 +156,11 @@ export default function BasicForm<T>({
   const onChangeForField =
     (field: BasicFormFieldDefinition<T>) => (value: T[keyof T]) => {
       if (editable && (!field.validate || field.validate(value)))
-        setItemState((prevState: T) => ({
-          ...prevState,
-          [field.key]: value,
-        }));
+        setItemState((prevState: T) => {
+          const newItem = clone(prevState);
+          newItem[field.key] = value;
+          return newItem;
+        });
     };
 
   // Delete an array item in the given value
@@ -158,12 +168,13 @@ export default function BasicForm<T>({
     field: BasicFormFieldDefinition<T>,
     arrayItem: HasUniqueId
   ) => {
-    setItemState((prevState: T) => ({
-      ...prevState,
-      [field.key]: (prevState[field.key] as HasUniqueId[]).filter(
-        (ai) => ai.id !== arrayItem.id
-      ),
-    }));
+    setItemState((prevState: T) => {
+      const newItem = clone(prevState);
+      newItem[field.key] =
+        (prevState[field.key] as HasUniqueId[]).filter(
+          (ai) => ai.id !== arrayItem.id);
+      return newItem;
+    });
   };
 
   // Add an array item
@@ -171,10 +182,12 @@ export default function BasicForm<T>({
     field: BasicFormFieldDefinition<T>,
     arrayItem: HasUniqueId
   ) => {
-    setItemState((prevState: T) => ({
-      ...prevState,
-      [field.key]: (prevState[field.key] as HasUniqueId[]).concat([arrayItem]),
-    }));
+    setItemState((prevState: T) => {
+      const newItem = clone(prevState);
+      newItem[field.key] =
+        (prevState[field.key] as HasUniqueId[]).concat([arrayItem]);
+      return newItem;
+    });
   };
 
   return (
