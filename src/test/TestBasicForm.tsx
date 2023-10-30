@@ -44,7 +44,7 @@ const fields: BasicFormFieldDefinition<TestData>[] = [
   {
     key: 'age',
     label: 'Age',
-    render: (field, value, onChange) => (
+    render: (field, value, item, onChange) => (
       <TextField
         variant="filled"
         label={field.label}

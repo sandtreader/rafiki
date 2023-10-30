@@ -39,7 +39,8 @@ export interface BasicFormFieldDefinition<T> {
   render?: (
     field: BasicFormFieldDefinition<T>,
     value: T[keyof T],
-    onChange?: (value: T[keyof T]) => void
+    item: T,
+    onChange?: (value: T[keyof T]) => void   // undefined = readonly
   ) => ReactNode;
 
   // Validation function - run on value before change accepted
@@ -219,7 +220,8 @@ export default function BasicForm<T>({
 
             // Custom render?
             if (field.render)
-              return field.render(field, value, onChangeForField(field));
+              return field.render(field, value, itemState,
+                                  editable?onChangeForField(field):undefined);
 
             // Boolean?
             if (typeof value == 'boolean') {
@@ -228,6 +230,7 @@ export default function BasicForm<T>({
                   control={
                     <Switch
                       checked={value}
+                      disabled={!editable}
                       onChange={(e) =>
                         onChangeForField(field)(e.target.checked as T[keyof T])
                       }
