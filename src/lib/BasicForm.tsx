@@ -1,6 +1,6 @@
 // Form to view / edit / create details of an item
 
-import { ReactNode, useState, useEffect } from 'react';
+import React, { ReactNode, useState, useEffect } from 'react';
 
 import {
   Button,
@@ -220,84 +220,87 @@ export default function BasicForm<T>({
 
             // Custom render?
             if (field.render)
-              return field.render(field, value, itemState,
-                                  editable?onChangeForField(field):undefined);
+              return <React.Fragment key={String(field.key)}>
+                { field.render(field, value, itemState,
+                               editable?onChangeForField(field):undefined)
+                }</React.Fragment>
 
-            // Boolean?
-            if (typeof value == 'boolean') {
-              return (
-                <FormControlLabel
-                  control={
-                    <Switch
-                      checked={value}
-                      disabled={!editable}
-                      onChange={(e) =>
-                        onChangeForField(field)(e.target.checked as T[keyof T])
-                      }
-                    />
-                  }
-                  label={field.label}
-                  labelPlacement="end"
-                />
-              );
-            }
-
-            // Array?
-            if (field.arrayItems) {
-              const items = value as HasUniqueId[];
-              const allItems = allItemsForField[String(field.key)];
-
-              switch (field.arrayStyle) {
-                case undefined:
-                case BasicFormFieldArrayStyle.chips:
-                  return (
-                    <>
-                      <Typography variant="h6">{field.label}</Typography>
-                      <ChipArrayField
-                        field={field}
-                        items={items}
-                        allItems={allItems}
-                        editable={editable}
-                        deleteItem={deleteArrayItem}
-                        addItem={addArrayItem}
+              // Boolean?
+              if (typeof value == 'boolean') {
+                return (
+                  <FormControlLabel
+                    control={
+                      <Switch
+                        checked={value}
+                        disabled={!editable}
+                        onChange={(e) =>
+                          onChangeForField(field)(e.target.checked as T[keyof T])
+                        }
                       />
-                    </>
-                  );
-
-                case BasicFormFieldArrayStyle.table:
-                  return (
-                    <>
-                      <Typography variant="h6">{field.label}</Typography>
-                      <TableArrayField
-                        field={field}
-                        items={items}
-                        allItems={allItems}
-                        editable={editable}
-                        deleteItem={deleteArrayItem}
-                        addItem={addArrayItem}
-                      />
-                    </>
-                  );
-
-                case BasicFormFieldArrayStyle.checklist:
-                  return (
-                    <>
-                      <Typography variant="h6">{field.label}</Typography>
-                      <ChecklistArrayField
-                        field={field}
-                        items={items}
-                        allItems={allItems}
-                        editable={editable}
-                        deleteItem={deleteArrayItem}
-                        addItem={addArrayItem}
-                      />
-                    </>
-                  );
+                    }
+                    key={String(field.key)}
+                    label={field.label}
+                    labelPlacement="end"
+                  />
+                );
               }
-            }
 
-            // Default to text field
-            return (
+              // Array?
+              if (field.arrayItems) {
+                const items = value as HasUniqueId[];
+                const allItems = allItemsForField[String(field.key)];
+
+                switch (field.arrayStyle) {
+                  case undefined:
+                  case BasicFormFieldArrayStyle.chips:
+                    return (
+                      <React.Fragment key={String(field.key)}>
+                        <Typography variant="h6">{field.label}</Typography>
+                        <ChipArrayField
+                          field={field}
+                          items={items}
+                          allItems={allItems}
+                          editable={editable}
+                          deleteItem={deleteArrayItem}
+                          addItem={addArrayItem}
+                        />
+                      </React.Fragment>
+                    );
+
+                  case BasicFormFieldArrayStyle.table:
+                    return (
+                      <React.Fragment key={String(field.key)}>
+                        <Typography variant="h6">{field.label}</Typography>
+                        <TableArrayField
+                          field={field}
+                          items={items}
+                          allItems={allItems}
+                          editable={editable}
+                          deleteItem={deleteArrayItem}
+                          addItem={addArrayItem}
+                        />
+                      </React.Fragment>
+                    );
+
+                  case BasicFormFieldArrayStyle.checklist:
+                    return (
+                      <React.Fragment key={String(field.key)}>
+                        <Typography variant="h6">{field.label}</Typography>
+                        <ChecklistArrayField
+                          field={field}
+                          items={items}
+                          allItems={allItems}
+                          editable={editable}
+                          deleteItem={deleteArrayItem}
+                          addItem={addArrayItem}
+                        />
+                      </React.Fragment>
+                    );
+                }
+              }
+
+              // Default to text field
+              return (
               <TextField
                 key={String(field.key)}
                 label={field.label}
@@ -308,7 +311,7 @@ export default function BasicForm<T>({
                   onChangeForField(field)(e.target.value as T[keyof T])
                 }
               />
-            );
+              );
           })}
         </Stack>
       </DialogContent>

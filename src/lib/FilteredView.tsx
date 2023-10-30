@@ -56,8 +56,8 @@ export default function FilteredView<T extends HasUniqueId>({
   return (
     <>
       <Box display="flex" sx={{ margin: '10px 0', alignItems: 'center' }}>
-        {headerExtras?.map((extra) => (
-          <Box sx={{ m: 1 }}>{extra}</Box>
+        {headerExtras?.map((extra, index) => (
+          <Box key={index} sx={{ m: 1 }}>{extra}</Box>
         ))}
         <Box>
           <TextField
