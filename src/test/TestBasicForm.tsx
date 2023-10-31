@@ -20,6 +20,7 @@ interface TestData {
   likesBooks: boolean;
   notes?: string;
   friends?: Friend[];
+  bestFriend?: Friend;
 }
 
 const whiteRabbit: Friend = { id: 2, name: 'White Rabbit' };
@@ -37,6 +38,7 @@ const testData: TestData = {
   likesBooks: true,
   notes: 'Tendency to fantasy involving white rabbits',
   friends: [whiteRabbit, dormouse],
+  bestFriend: whiteRabbit
 };
 
 const fields: BasicFormFieldDefinition<TestData>[] = [
@@ -62,6 +64,13 @@ const fields: BasicFormFieldDefinition<TestData>[] = [
     label: 'Friends',
     arrayItems: () => Promise.resolve(allFriends),
     arrayStyle: BasicFormFieldArrayStyle.checklist,
+    getItemName: (item) => (item as Friend).name,
+  },
+  {
+    key: 'bestFriend',
+    label: 'Best friend',
+    arrayItems: () => Promise.resolve(allFriends),
+    arrayStyle: BasicFormFieldArrayStyle.single,
     getItemName: (item) => (item as Friend).name,
   },
 ];
