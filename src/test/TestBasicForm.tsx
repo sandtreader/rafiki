@@ -38,7 +38,7 @@ const testData: TestData = {
   likesBooks: true,
   notes: 'Tendency to fantasy involving white rabbits',
   friends: [whiteRabbit, dormouse],
-  bestFriend: whiteRabbit
+  bestFriend: whiteRabbit,
 };
 
 const fields: BasicFormFieldDefinition<TestData>[] = [
@@ -102,11 +102,11 @@ const TestBasicForm: React.FunctionComponent<TestBasicFormProps> = ({
 
   const form = () => (
     <BasicForm<TestData>
-      intent={editable?FormIntent.ViewWithEdit:FormIntent.Edit}
+      intent={editable ? FormIntent.ViewWithEdit : FormIntent.Edit}
       item={testData}
       onClose={dialog ? handleClose : undefined}
-      onDelete={editable?handleDelete:undefined}
-      onSave={editable?handleSave:undefined}
+      onDelete={editable ? handleDelete : undefined}
+      onSave={editable ? handleSave : undefined}
       fields={fields}
       getTitle={(item) => `Test: ${item.id} ${item.name}`}
     />
@@ -120,7 +120,7 @@ const TestBasicForm: React.FunctionComponent<TestBasicFormProps> = ({
         control={
           <Switch
             checked={editable}
-            onChange={(e) => setEditable(e.target.checked) }
+            onChange={(e) => setEditable(e.target.checked)}
           />
         }
         label="Editable"

@@ -17,7 +17,7 @@ import {
   InputLabel,
   Switch,
   Select,
-  MenuItem
+  MenuItem,
 } from '@mui/material';
 
 import { FormIntent, FormProps, HasUniqueId } from './Types';
@@ -29,7 +29,7 @@ export enum BasicFormFieldArrayStyle {
   chips = 0,
   table = 1,
   checklist = 2,
-  single = 3
+  single = 3,
 }
 
 /** Definition of fields we want to show */
@@ -45,7 +45,7 @@ export interface BasicFormFieldDefinition<T> {
     field: BasicFormFieldDefinition<T>,
     value: T[keyof T],
     item: T,
-    onChange?: (value: T[keyof T]) => void   // undefined = readonly
+    onChange?: (value: T[keyof T]) => void // undefined = readonly
   ) => ReactNode;
 
   // Validation function - run on value before change accepted
@@ -176,9 +176,9 @@ export default function BasicForm<T>({
   ) => {
     setItemState((prevState: T) => {
       const newItem = clone(prevState);
-      newItem[field.key] =
-        (prevState[field.key] as HasUniqueId[]).filter(
-          (ai) => ai.id !== arrayItem.id);
+      newItem[field.key] = (prevState[field.key] as HasUniqueId[]).filter(
+        (ai) => ai.id !== arrayItem.id
+      );
       return newItem;
     });
   };
@@ -190,8 +190,9 @@ export default function BasicForm<T>({
   ) => {
     setItemState((prevState: T) => {
       const newItem = clone(prevState);
-      newItem[field.key] =
-        (prevState[field.key] as HasUniqueId[]).concat([arrayItem]);
+      newItem[field.key] = (prevState[field.key] as HasUniqueId[]).concat([
+        arrayItem,
+      ]);
       return newItem;
     });
   };
@@ -225,122 +226,131 @@ export default function BasicForm<T>({
 
             // Custom render?
             if (field.render)
-              return <React.Fragment key={String(field.key)}>
-                { field.render(field, value, itemState,
-                               editable?onChangeForField(field):undefined)
-                }</React.Fragment>
+              return (
+                <React.Fragment key={String(field.key)}>
+                  {field.render(
+                    field,
+                    value,
+                    itemState,
+                    editable ? onChangeForField(field) : undefined
+                  )}
+                </React.Fragment>
+              );
 
-              // Boolean?
-              if (typeof value == 'boolean') {
-                return (
-                  <FormControlLabel
-                    control={
-                      <Switch
-                        checked={value}
-                        disabled={!editable}
-                        onChange={(e) =>
-                          onChangeForField(field)(e.target.checked as T[keyof T])
-                        }
-                      />
-                    }
-                    key={String(field.key)}
-                    label={field.label}
-                    labelPlacement="end"
-                  />
-                );
-              }
+            // Boolean?
+            if (typeof value == 'boolean') {
+              return (
+                <FormControlLabel
+                  control={
+                    <Switch
+                      checked={value}
+                      disabled={!editable}
+                      onChange={(e) =>
+                        onChangeForField(field)(e.target.checked as T[keyof T])
+                      }
+                    />
+                  }
+                  key={String(field.key)}
+                  label={field.label}
+                  labelPlacement="end"
+                />
+              );
+            }
 
-              // Single selector?
-              if (field.arrayStyle === BasicFormFieldArrayStyle.single) {
-                const allItems = allItemsForField[String(field.key)];
-                return (
-                  allItems &&
+            // Single selector?
+            if (field.arrayStyle === BasicFormFieldArrayStyle.single) {
+              const allItems = allItemsForField[String(field.key)];
+              return (
+                allItems && (
                   <FormControl>
                     <InputLabel id={`{field.label}-select-label`}>
                       {field.label}
                     </InputLabel>
                     <Select
                       labelId={`${field.label}-select-label`}
-                      value={value?(value as any).id:""}
+                      value={value ? (value as any).id : ''}
                       label={field.label}
                       disabled={!editable}
-                      onChange={ e =>
-                        onChangeForField(field)
-                         (allItems.find(i => i.id === e.target.value) as T[keyof T])
+                      onChange={(e) =>
+                        onChangeForField(field)(
+                          allItems.find(
+                            (i) => i.id === e.target.value
+                          ) as T[keyof T]
+                        )
                       }
                     >
-                      { allItems.map( item => {
-                          const name = field.getItemName ?
-                                       field.getItemName(item)
-                                     : item.id;
-                          return (
-                            <MenuItem key={item.id} value={item.id}>
-                              {name}
-                            </MenuItem>
-                          );
-                      })
-                      }
+                      {allItems.map((item) => {
+                        const name = field.getItemName
+                          ? field.getItemName(item)
+                          : item.id;
+                        return (
+                          <MenuItem key={item.id} value={item.id}>
+                            {name}
+                          </MenuItem>
+                        );
+                      })}
                     </Select>
                   </FormControl>
-                );
+                )
+              );
+            }
+
+            // Array?
+            if (field.arrayItems) {
+              const items = value as HasUniqueId[];
+              const allItems = allItemsForField[String(field.key)];
+
+              switch (field.arrayStyle) {
+                case undefined:
+                case BasicFormFieldArrayStyle.chips:
+                  return (
+                    <React.Fragment key={String(field.key)}>
+                      <Typography variant="h6">{field.label}</Typography>
+                      <ChipArrayField
+                        field={field}
+                        items={items}
+                        allItems={allItems}
+                        editable={editable}
+                        deleteItem={deleteArrayItem}
+                        addItem={addArrayItem}
+                      />
+                    </React.Fragment>
+                  );
+
+                case BasicFormFieldArrayStyle.table:
+                  return (
+                    <React.Fragment key={String(field.key)}>
+                      <Typography variant="h6">{field.label}</Typography>
+                      <TableArrayField
+                        field={field}
+                        items={items}
+                        allItems={allItems}
+                        editable={editable}
+                        deleteItem={deleteArrayItem}
+                        addItem={addArrayItem}
+                      />
+                    </React.Fragment>
+                  );
+
+                case BasicFormFieldArrayStyle.checklist:
+                  return (
+                    <React.Fragment key={String(field.key)}>
+                      <Typography variant="h6">{field.label}</Typography>
+                      <ChecklistArrayField
+                        field={field}
+                        items={items}
+                        allItems={allItems}
+                        editable={editable}
+                        deleteItem={deleteArrayItem}
+                        addItem={addArrayItem}
+                      />
+                    </React.Fragment>
+                  );
               }
+            }
 
-              // Array?
-              if (field.arrayItems) {
-                const items = value as HasUniqueId[];
-                const allItems = allItemsForField[String(field.key)];
-
-                switch (field.arrayStyle) {
-                  case undefined:
-                  case BasicFormFieldArrayStyle.chips:
-                    return (
-                      <React.Fragment key={String(field.key)}>
-                        <Typography variant="h6">{field.label}</Typography>
-                        <ChipArrayField
-                          field={field}
-                          items={items}
-                          allItems={allItems}
-                          editable={editable}
-                          deleteItem={deleteArrayItem}
-                          addItem={addArrayItem}
-                        />
-                      </React.Fragment>
-                    );
-
-                  case BasicFormFieldArrayStyle.table:
-                    return (
-                      <React.Fragment key={String(field.key)}>
-                        <Typography variant="h6">{field.label}</Typography>
-                        <TableArrayField
-                          field={field}
-                          items={items}
-                          allItems={allItems}
-                          editable={editable}
-                          deleteItem={deleteArrayItem}
-                          addItem={addArrayItem}
-                        />
-                      </React.Fragment>
-                    );
-
-                  case BasicFormFieldArrayStyle.checklist:
-                    return (
-                      <React.Fragment key={String(field.key)}>
-                        <Typography variant="h6">{field.label}</Typography>
-                        <ChecklistArrayField
-                          field={field}
-                          items={items}
-                          allItems={allItems}
-                          editable={editable}
-                          deleteItem={deleteArrayItem}
-                          addItem={addArrayItem}
-                        />
-                      </React.Fragment>
-                    );
-                }
-              }
-
-              // Default to text field
-              return (
+            // Default to text field
+            return (
               <TextField
                 key={String(field.key)}
                 label={field.label}
@@ -351,7 +361,7 @@ export default function BasicForm<T>({
                   onChangeForField(field)(e.target.value as T[keyof T])
                 }
               />
-              );
+            );
           })}
         </Stack>
       </DialogContent>

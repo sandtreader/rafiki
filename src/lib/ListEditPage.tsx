@@ -106,7 +106,7 @@ export default function ListEditPage<T extends HasUniqueId>({
           <ItemListView
             items={filteredItems}
             onSelect={setSelectedItem}
-            onDelete={deleteItem?onDelete:undefined}
+            onDelete={deleteItem ? onDelete : undefined}
             columns={columns}
           />
         )}
@@ -122,12 +122,16 @@ export default function ListEditPage<T extends HasUniqueId>({
             fullWidth={true}
           >
             <ItemForm
-              intent={creating ? FormIntent.Create :
-                      (saveItem ? FormIntent.ViewWithEdit :
-                       FormIntent.View)}
+              intent={
+                creating
+                  ? FormIntent.Create
+                  : saveItem
+                  ? FormIntent.ViewWithEdit
+                  : FormIntent.View
+              }
               item={selectedItem}
-              onDelete={deleteItem?onDelete:undefined}
-              onSave={saveItem?onSave:undefined}
+              onDelete={deleteItem ? onDelete : undefined}
+              onSave={saveItem ? onSave : undefined}
               onClose={onClose}
               fields={fields}
               getTitle={

@@ -51,7 +51,7 @@ const TestListView: React.FunctionComponent = () => {
         control={
           <Switch
             checked={editable}
-            onChange={(e) => setEditable(e.target.checked) }
+            onChange={(e) => setEditable(e.target.checked)}
           />
         }
         label="Editable"
@@ -61,14 +61,14 @@ const TestListView: React.FunctionComponent = () => {
       <FilteredView<TestData>
         items={testData}
         searchColumns={['name', 'age']}
-        onCreate={editable?handleCreate:undefined}
+        onCreate={editable ? handleCreate : undefined}
         headerExtras={extras}
       >
         {(filteredItems: TestData[]) => (
           <ListView<TestData>
             items={filteredItems}
             onSelect={handleSelect}
-            onDelete={editable?handleDelete:undefined}
+            onDelete={editable ? handleDelete : undefined}
             columns={columns}
           />
         )}

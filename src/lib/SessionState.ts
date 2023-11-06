@@ -22,23 +22,23 @@ export default class SessionState {
   public error?: string;
 
   /** Constructor */
-  public constructor(loggedIn: boolean, userId?: string)
-  {
+  public constructor(loggedIn: boolean, userId?: string) {
     this.loggedIn = loggedIn;
     this.userId = userId;
   }
 
   /** Find if the user has a capability pattern matching the given
       requirement */
-  public hasCapability(requirement: string): boolean
-  {
+  public hasCapability(requirement: string): boolean {
     for (const capability of this.capabilities || []) {
       // Convert a glob-style * pattern into a regexp, protecting all
       // the special chars
-      const res = '^' +
-        capability.replace(/([.+?^=!:${}()|[\]/\\])/g, "\\$1")
-          .replace(/\*/g, '.*')
-        + '$';
+      const res =
+        '^' +
+        capability
+          .replace(/([.+?^=!:${}()|[\]/\\])/g, '\\$1')
+          .replace(/\*/g, '.*') +
+        '$';
 
       // We test the requirement against the capability pattern
       const re = new RegExp(res);

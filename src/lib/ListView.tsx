@@ -55,7 +55,7 @@ export default function ListView<T extends HasUniqueId>({
             {columns.map((column) => (
               <TableCell key={String(column.key)}>{column.label}</TableCell>
             ))}
-            { onDelete && <TableCell key="action">Action</TableCell> }
+            {onDelete && <TableCell key="action">Action</TableCell>}
           </TableRow>
         </TableHead>
         <TableBody>
@@ -65,12 +65,11 @@ export default function ListView<T extends HasUniqueId>({
                 {columns.map((column, i) => (
                   <TableCell key={i}>
                     {column.render
-                    ? column.render(item)
-                    : String(item[column.key])}
+                      ? column.render(item)
+                      : String(item[column.key])}
                   </TableCell>
                 ))}
-                {
-                  onDelete &&
+                {onDelete && (
                   <TableCell>
                     <IconButton
                       aria-label="delete"
@@ -83,7 +82,7 @@ export default function ListView<T extends HasUniqueId>({
                       <Icon>delete</Icon>
                     </IconButton>
                   </TableCell>
-                }
+                )}
               </TableRow>
             );
           })}

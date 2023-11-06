@@ -87,10 +87,12 @@ export default class MenuStructure {
         for (const capability of capabilities) {
           // Convert a glob-style * pattern into a regexp, protecting all
           // the special chars
-          const res = '^' +
-            capability.replace(/([.+?^=!:${}()|[\]/\\])/g, "\\$1")
-              .replace(/\*/g, '.*')
-            + '$';
+          const res =
+            '^' +
+            capability
+              .replace(/([.+?^=!:${}()|[\]/\\])/g, '\\$1')
+              .replace(/\*/g, '.*') +
+            '$';
 
           // We test the requirement against the capability pattern
           const re = new RegExp(res);
