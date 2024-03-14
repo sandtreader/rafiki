@@ -12,6 +12,12 @@ type Friend = {
   name: string;
 };
 
+enum Colour {
+  red = "Red",
+  black = "Black",
+  white = "White"
+};
+
 interface TestData {
   id: string;
   name: string;
@@ -21,6 +27,7 @@ interface TestData {
   notes?: string;
   friends?: Friend[];
   bestFriend?: Friend;
+  shoeColour: Colour;
 }
 
 const whiteRabbit: Friend = { id: 2, name: 'White Rabbit' };
@@ -39,6 +46,7 @@ const testData: TestData = {
   notes: 'Tendency to fantasy involving white rabbits',
   friends: [whiteRabbit, dormouse],
   bestFriend: whiteRabbit,
+  shoeColour: Colour.red,
 };
 
 const fields: BasicFormFieldDefinition<TestData>[] = [
@@ -73,6 +81,11 @@ const fields: BasicFormFieldDefinition<TestData>[] = [
     arrayStyle: BasicFormFieldArrayStyle.single,
     getItemName: (item) => (item as Friend).name,
   },
+  {
+    key: 'shoeColour',
+    label: "Colour of shoes",
+    enumType: Colour
+  }
 ];
 
 export interface TestBasicFormProps {

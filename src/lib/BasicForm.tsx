@@ -64,6 +64,10 @@ export interface BasicFormFieldDefinition<T> {
   // Array item name function - gives the name for a given item if present,
   // otherwise just uses the ID
   getItemName?: (item: HasUniqueId) => string;
+
+  // Enum type - presence makes this an enum field
+  // For a string enum, just pass in the enum type
+  enumType?: { [ id: string]: string };
 }
 
 /** Basic form props, parameterised by the type we are displaying */
@@ -349,6 +353,32 @@ export default function BasicForm<T>({
               }
             }
 
+            // Enum?
+            if (field.enumType) {
+              return (
+                <FormControl>
+                  <InputLabel id={`{field.label}-select-label`}>
+                    {field.label}
+                  </InputLabel>
+                  <Select
+                    labelId={`${field.label}-select-label`}
+                    value={value}
+                    label={field.label}
+                    disabled={!editable}
+                    onChange={e =>
+                      onChangeForField(field)(e.target.value as T[keyof T])}
+                    >
+                      {Object.entries(field.enumType).map(([id, name]) =>
+                          <MenuItem key={id} value={name}>
+                            {name}
+                          </MenuItem>
+                        )
+                      }
+                    </Select>
+                  </FormControl>
+                )
+
+            }
             // Default to text field
             return (
               <TextField

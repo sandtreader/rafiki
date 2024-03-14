@@ -9,7 +9,7 @@
     "dashboard"
   ],
   "license": "MIT",
-  "version": "0.1.15-2",
+  "version": "0.1.16-1",
   "type": "module",
   "source": "src/rafiki.ts",
   "main": "dist/rafiki.cjs",
