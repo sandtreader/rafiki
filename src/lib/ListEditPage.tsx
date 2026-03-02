@@ -21,6 +21,7 @@ export interface ListEditPageProps<T extends HasUniqueId> {
   typeName: string;
   fetchItems: () => Promise<T[]>;
   createItem?: (id: string) => Promise<T>;
+  cloneItem?: (sourceItem: T, newId: string) => Promise<T>;
   saveItem?: (item: T, oldItem: T) => Promise<void>;
   deleteItem?: (item: T) => Promise<void>;
   columns: ListViewColumnDefinition<T>[];
@@ -36,6 +37,7 @@ export default function ListEditPage<T extends HasUniqueId>({
   typeName,
   fetchItems,
   createItem,
+  cloneItem,
   saveItem,
   deleteItem,
   columns,
@@ -48,6 +50,8 @@ export default function ListEditPage<T extends HasUniqueId>({
   const [selectedItem, setSelectedItem] = useState<T | null>(null);
   const [creating, setCreating] = useState(false);
   const [createId, setCreateId] = useState('');
+  const [cloneSource, setCloneSource] = useState<T | null>(null);
+  const [cloneId, setCloneId] = useState('');
 
   // Update items
   const fetch = useCallback(async () => {
@@ -67,6 +71,16 @@ export default function ListEditPage<T extends HasUniqueId>({
     fetch();
     setSelectedItem(item);
     setCreateId('');
+  };
+
+  // Clone a item
+  const onClone = async () => {
+    if (!cloneItem || !cloneSource) return;
+    const item = await cloneItem(cloneSource, cloneId);
+    fetch();
+    setSelectedItem(item);
+    setCloneSource(null);
+    setCloneId('');
   };
 
   // Save changes
@@ -107,6 +121,9 @@ export default function ListEditPage<T extends HasUniqueId>({
             items={filteredItems}
             onSelect={setSelectedItem}
             onDelete={deleteItem ? onDelete : undefined}
+            onClone={cloneItem ? (item: T) => {
+              setCloneSource(item);
+            } : undefined}
             columns={columns}
           />
         )}
@@ -181,6 +198,52 @@ export default function ListEditPage<T extends HasUniqueId>({
                 </Button>
                 <Button type="submit" disabled={createId === ''}>
                   Create
+                </Button>
+              </DialogActions>
+            </form>
+          </Dialog>
+        )
+      }
+
+      {
+        // Clone dialog - needs a new ID
+        cloneSource && (
+          <Dialog
+            open={true}
+            onClose={(_) => {
+              setCloneSource(null);
+              setCloneId('');
+            }}
+          >
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                onClone();
+              }}
+            >
+              <DialogTitle>Clone {typeName} {cloneSource.id}</DialogTitle>
+              <DialogContent>
+                <TextField
+                  autoFocus
+                  id="clone-id"
+                  label={`New ${typeName} ID`}
+                  fullWidth
+                  variant="standard"
+                  value={cloneId}
+                  onChange={(e) => setCloneId(e.target.value)}
+                />
+              </DialogContent>
+              <DialogActions>
+                <Button
+                  onClick={(_) => {
+                    setCloneSource(null);
+                    setCloneId('');
+                  }}
+                >
+                  Cancel
+                </Button>
+                <Button type="submit" disabled={cloneId === ''}>
+                  Clone
                 </Button>
               </DialogActions>
             </form>

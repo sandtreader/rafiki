@@ -29,6 +29,7 @@ export interface ListViewProps<T extends HasUniqueId> {
   items: T[];
   onSelect: (item: T) => void;
   onDelete?: (item: T) => void;
+  onClone?: (item: T) => void;
   columns: ListViewColumnDefinition<T>[];
 }
 
@@ -37,6 +38,7 @@ export default function ListView<T extends HasUniqueId>({
   items,
   onSelect,
   onDelete,
+  onClone,
   columns,
 }: ListViewProps<T>) {
   // Sort items on any field that requires it, assuming only one for now
@@ -55,7 +57,7 @@ export default function ListView<T extends HasUniqueId>({
             {columns.map((column) => (
               <TableCell key={String(column.key)}>{column.label}</TableCell>
             ))}
-            {onDelete && <TableCell key="action">Action</TableCell>}
+            {(onDelete || onClone) && <TableCell key="action">Action</TableCell>}
           </TableRow>
         </TableHead>
         <TableBody>
@@ -69,18 +71,32 @@ export default function ListView<T extends HasUniqueId>({
                       : String(item[column.key])}
                   </TableCell>
                 ))}
-                {onDelete && (
+                {(onDelete || onClone) && (
                   <TableCell>
-                    <IconButton
-                      aria-label="delete"
-                      size="large"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        onDelete(item);
-                      }}
-                    >
-                      <Icon>delete</Icon>
-                    </IconButton>
+                    {onClone && (
+                      <IconButton
+                        aria-label="clone"
+                        size="large"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onClone(item);
+                        }}
+                      >
+                        <Icon>content_copy</Icon>
+                      </IconButton>
+                    )}
+                    {onDelete && (
+                      <IconButton
+                        aria-label="delete"
+                        size="large"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onDelete(item);
+                        }}
+                      >
+                        <Icon>delete</Icon>
+                      </IconButton>
+                    )}
                   </TableCell>
                 )}
               </TableRow>
