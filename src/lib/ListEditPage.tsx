@@ -123,6 +123,7 @@ export default function ListEditPage<T extends HasUniqueId>({
             onDelete={deleteItem ? onDelete : undefined}
             onClone={cloneItem ? (item: T) => {
               setCloneSource(item);
+              setCloneId(`${item.id}-copy`);
             } : undefined}
             columns={columns}
           />
