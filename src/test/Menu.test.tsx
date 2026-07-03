@@ -7,10 +7,10 @@ import {
   within,
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import '@testing-library/jest-dom';
 
 import Menu from '../lib/Menu';
 import { exampleMenu } from '../test/ExampleMenuStructure';
+import TestListView from '../test/TestListView';
 import StaticMenuProvider from '../lib/StaticMenuProvider';
 import MenuState from '../lib/MenuState';
 
@@ -20,12 +20,12 @@ test('it renders the example menu initially folded', () => {
   const provider = new StaticMenuProvider(exampleMenu);
   const structure = provider.getMenu();
   let state: MenuState = {};
-  const mockSetState = jest.fn((prevState) => {
+  const mockSetState = vi.fn((prevState) => {
     state = prevState;
   });
   render(<Menu structure={structure} state={state} setState={mockSetState} />);
 
-  expect(screen.getAllByRole('menuitem')).toHaveLength(2); // until unfolded
+  expect(screen.getAllByRole('menuitem')).toHaveLength(3); // until unfolded
 
   // Top levels are visible
   expect(screen.getByTestId('menuitem.foo')).toBeVisible();
@@ -34,7 +34,7 @@ test('it renders the example menu initially folded', () => {
   // Children and grandchildren aren't
   expect(screen.getByTestId('menuitem.foo.child')).not.toBeVisible();
   expect(
-    screen.getByTestId('menuitem.foo.child.grandchild1')
+    screen.getByTestId('menuitem.foo.child.grandchild1'),
   ).not.toBeVisible();
 
   // Check text
@@ -50,18 +50,18 @@ test('it unfolds the example menu', async () => {
   const provider = new StaticMenuProvider(exampleMenu);
   const structure = provider.getMenu();
   let state: MenuState = {};
-  const mockSetState = jest.fn((update) => {
+  const mockSetState = vi.fn((update) => {
     state = update(state);
   });
   const { rerender } = render(
-    <Menu structure={structure} state={state} setState={mockSetState} />
+    <Menu structure={structure} state={state} setState={mockSetState} />,
   );
 
   // Click on FOO to unfold
   await userEvent.click(screen.getByText('FOO'));
   await screen.findByText('CHILD'); // Allow animation to complete
 
-  expect(screen.getAllByRole('menuitem')).toHaveLength(3);
+  expect(screen.getAllByRole('menuitem')).toHaveLength(4);
 
   // Top levels and child are visible
   expect(screen.getByTestId('menuitem.foo')).toBeVisible();
@@ -70,7 +70,7 @@ test('it unfolds the example menu', async () => {
 
   // Grandchildren still aren't
   expect(
-    screen.getByTestId('menuitem.foo.child.grandchild1')
+    screen.getByTestId('menuitem.foo.child.grandchild1'),
   ).not.toBeVisible();
 
   // Check text
@@ -80,25 +80,24 @@ test('it unfolds the example menu', async () => {
 
   // Foo should be selected now
   rerender(
-    <Menu structure={structure} state={state} setState={mockSetState} />
+    <Menu structure={structure} state={state} setState={mockSetState} />,
   );
   expect(
     within(screen.getByTestId('menuitem.foo'))
       .getByRole('button')
-      .classList.contains('Mui-selected')
+      .classList.contains('Mui-selected'),
   ).toBe(true);
 
   // Check setState
   expect(mockSetState.mock.calls.length).toBe(1);
-  expect(state.content!.type).toBe('h1');
-  expect(state.content!.props.children).toBe('This is a FOO!');
+  expect(state.content!.type).toBe(TestListView);
   expect(state.selectedItemId).toBe('foo');
 
   // Now click on the child too
   await userEvent.click(screen.getByText('CHILD'));
   await screen.findAllByText(/GRANDCHILD/); // Allow animation to complete
 
-  expect(screen.getAllByRole('menuitem')).toHaveLength(5);
+  expect(screen.getAllByRole('menuitem')).toHaveLength(6);
   expect(screen.getByTestId('menuitem.foo.child')).toBeVisible();
   expect(screen.getByTestId('menuitem.foo.child.grandchild1')).toBeVisible();
   expect(screen.getByTestId('menuitem.foo.child.grandchild2')).toBeVisible();
@@ -107,22 +106,22 @@ test('it unfolds the example menu', async () => {
   expect(screen.getByText('GRANDCHILD 2')).toBeVisible();
 
   expect(mockSetState.mock.calls.length).toBe(2);
-  expect(state.content!.type).toBe('h2');
+  expect(state.content!.type).toBe('h1');
   expect(state.content!.props.children).toBe('This is the child');
 
   // Child should be selected now
   rerender(
-    <Menu structure={structure} state={state} setState={mockSetState} />
+    <Menu structure={structure} state={state} setState={mockSetState} />,
   );
   expect(
     within(screen.getByTestId('menuitem.foo.child'))
       .getByRole('button')
-      .classList.contains('Mui-selected')
+      .classList.contains('Mui-selected'),
   ).toBe(true);
   expect(
     within(screen.getByTestId('menuitem.foo'))
       .getByRole('button')
-      .classList.contains('Mui-selected')
+      .classList.contains('Mui-selected'),
   ).toBe(false);
 
   // Click on a grandchild
@@ -133,29 +132,29 @@ test('it unfolds the example menu', async () => {
 
   // Grandchild should be selected now
   rerender(
-    <Menu structure={structure} state={state} setState={mockSetState} />
+    <Menu structure={structure} state={state} setState={mockSetState} />,
   );
   expect(
     within(screen.getByTestId('menuitem.foo.child.grandchild1'))
       .getByRole('button')
-      .classList.contains('Mui-selected')
+      .classList.contains('Mui-selected'),
   ).toBe(true);
   expect(
     within(screen.getByTestId('menuitem.foo.child'))
       .getByRole('button')
-      .classList.contains('Mui-selected')
+      .classList.contains('Mui-selected'),
   ).toBe(false);
 
   // Click on FOO again to close up
   await userEvent.click(screen.getByText('FOO'));
   await waitFor(() => expect(screen.queryByText('CHILD')).not.toBeVisible());
-  expect(screen.getAllByRole('menuitem')).toHaveLength(2);
+  expect(screen.getAllByRole('menuitem')).toHaveLength(3);
   expect(screen.getByTestId('menuitem.foo.child')).not.toBeVisible();
   expect(
-    screen.getByTestId('menuitem.foo.child.grandchild1')
+    screen.getByTestId('menuitem.foo.child.grandchild1'),
   ).not.toBeVisible();
   expect(
-    screen.getByTestId('menuitem.foo.child.grandchild2')
+    screen.getByTestId('menuitem.foo.child.grandchild2'),
   ).not.toBeVisible();
 
   // Click on FOO again to unfold, but grandchildren should not now be visible
@@ -163,9 +162,9 @@ test('it unfolds the example menu', async () => {
   await screen.findByText('CHILD'); // Allow animation to complete
   expect(screen.getByTestId('menuitem.foo.child')).toBeVisible();
   expect(
-    screen.getByTestId('menuitem.foo.child.grandchild1')
+    screen.getByTestId('menuitem.foo.child.grandchild1'),
   ).not.toBeVisible();
   expect(
-    screen.getByTestId('menuitem.foo.child.grandchild2')
+    screen.getByTestId('menuitem.foo.child.grandchild2'),
   ).not.toBeVisible();
 });

@@ -138,8 +138,12 @@ const Framework: React.FunctionComponent<FrameworkProps> = ({
                   />
                   <Button
                     variant="contained"
-                    sx={{ marginLeft: 2, width: 250,
-                          position: 'absolute', bottom: 10 }}
+                    sx={{
+                      marginLeft: 2,
+                      width: 250,
+                      position: 'absolute',
+                      bottom: 10,
+                    }}
                     onClick={(e) => logOut()}
                   >
                     Log out

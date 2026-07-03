@@ -4,15 +4,16 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project
 
-Rafiki (`@sandtreader/rafiki`) — a lightweight React framework for building admin/management portals. Published as an ES module library via microbundle.
+Rafiki (`@sandtreader/rafiki`) — a lightweight React framework for building admin/management portals. Published as a dual ESM/CJS library, built with Vite.
 
 ## Commands
 
-- `npm start` — dev server for the example app
-- `npm test` — run tests (react-scripts test, watch mode by default; use `-- --watchAll=false` for single run)
+- `npm start` — Vite dev server for the example app
+- `npm test` — run tests with Vitest (watch mode by default; use `npm test -- run` for single run)
 - `npm run lint` — check formatting with prettier
 - `npm run format` — auto-format with prettier
-- `npm run build:lib` — build the library to dist/ (CJS, ESM, UMD via microbundle)
+- `npm run build` — build the example app to build/ (not published)
+- `npm run build:lib` — build the library to dist/ (ESM + CJS + types, via vite.lib.config.ts)
 - `npm run watch:lib` — watch mode for library build
 - `npm run publish:lib` — build + publish to npm
 

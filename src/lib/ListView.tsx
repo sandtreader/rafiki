@@ -46,7 +46,7 @@ export default function ListView<T extends HasUniqueId>({
   for (const column of columns)
     if (column.sort)
       items.sort((a: T, b: T) =>
-        String(a[column.key]).localeCompare(String(b[column.key]))
+        String(a[column.key]).localeCompare(String(b[column.key])),
       );
 
   return (
@@ -57,7 +57,9 @@ export default function ListView<T extends HasUniqueId>({
             {columns.map((column) => (
               <TableCell key={String(column.key)}>{column.label}</TableCell>
             ))}
-            {(onDelete || onClone) && <TableCell key="action">Action</TableCell>}
+            {(onDelete || onClone) && (
+              <TableCell key="action">Action</TableCell>
+            )}
           </TableRow>
         </TableHead>
         <TableBody>

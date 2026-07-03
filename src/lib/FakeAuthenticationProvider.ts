@@ -5,9 +5,7 @@ import AuthenticationProvider from './AuthenticationProvider';
 import SessionState from './SessionState';
 
 /** Fake Authentication provider */
-export default class FakeAuthenticationProvider
-  implements AuthenticationProvider
-{
+export default class FakeAuthenticationProvider implements AuthenticationProvider {
   /** Try to log in
    * @returns Session state if successful, error string if not
    */

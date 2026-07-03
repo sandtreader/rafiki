@@ -63,7 +63,7 @@ const Menu: React.FunctionComponent<MenuProps> = ({
   const generateChildren = (
     structure: MenuStructure,
     depth: number = 0,
-    parentId: string = ''
+    parentId: string = '',
   ) => {
     return (
       <List disablePadding>

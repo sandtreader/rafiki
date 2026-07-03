@@ -74,7 +74,7 @@ test('capability filtering', () => {
   ms_2.requirements = ['admin'];
   ms.children.push(ms_2);
 
-  const capabilities = ['test.*', 'useless'];
+  const capabilities = ['test*', 'useless'];
 
   const msf = ms.filterWithCapabilities(capabilities);
 

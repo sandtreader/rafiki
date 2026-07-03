@@ -121,10 +121,14 @@ export default function ListEditPage<T extends HasUniqueId>({
             items={filteredItems}
             onSelect={setSelectedItem}
             onDelete={deleteItem ? onDelete : undefined}
-            onClone={cloneItem ? (item: T) => {
-              setCloneSource(item);
-              setCloneId(`${item.id}-copy`);
-            } : undefined}
+            onClone={
+              cloneItem
+                ? (item: T) => {
+                    setCloneSource(item);
+                    setCloneId(`${item.id}-copy`);
+                  }
+                : undefined
+            }
             columns={columns}
           />
         )}
@@ -144,8 +148,8 @@ export default function ListEditPage<T extends HasUniqueId>({
                 creating
                   ? FormIntent.Create
                   : saveItem
-                  ? FormIntent.ViewWithEdit
-                  : FormIntent.View
+                    ? FormIntent.ViewWithEdit
+                    : FormIntent.View
               }
               item={selectedItem}
               onDelete={deleteItem ? onDelete : undefined}
@@ -222,7 +226,9 @@ export default function ListEditPage<T extends HasUniqueId>({
                 onClone();
               }}
             >
-              <DialogTitle>Clone {typeName} {cloneSource.id}</DialogTitle>
+              <DialogTitle>
+                Clone {typeName} {cloneSource.id}
+              </DialogTitle>
               <DialogContent>
                 <TextField
                   autoFocus

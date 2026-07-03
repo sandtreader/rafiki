@@ -27,27 +27,25 @@ export default function ChecklistArrayField<T>({
   return (
     <Table>
       <TableBody>
-        {
-          // We show all items
-          allItems?.map((item) => {
-            const name = field.getItemName ? field.getItemName(item) : item.id;
-            const checked = !!items.find((it) => it.id === item.id);
-            return (
-              <TableRow key={item.id}>
-                <TableCell sx={{ width: '1em' }} align="right">
-                  <Checkbox
-                    checked={checked}
-                    disabled={!editable}
-                    onChange={() =>
-                      checked ? deleteItem(field, item) : addItem(field, item)
-                    }
-                  />
-                </TableCell>
-                <TableCell>{name}</TableCell>
-              </TableRow>
-            );
-          })
-        }
+        {// We show all items
+        allItems?.map((item) => {
+          const name = field.getItemName ? field.getItemName(item) : item.id;
+          const checked = !!items.find((it) => it.id === item.id);
+          return (
+            <TableRow key={item.id}>
+              <TableCell sx={{ width: '1em' }} align="right">
+                <Checkbox
+                  checked={checked}
+                  disabled={!editable}
+                  onChange={() =>
+                    checked ? deleteItem(field, item) : addItem(field, item)
+                  }
+                />
+              </TableCell>
+              <TableCell>{name}</TableCell>
+            </TableRow>
+          );
+        })}
       </TableBody>
     </Table>
   );

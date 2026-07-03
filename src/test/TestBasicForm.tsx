@@ -13,10 +13,10 @@ type Friend = {
 };
 
 enum Colour {
-  red = "Red",
-  black = "Black",
-  white = "White"
-};
+  red = 'Red',
+  black = 'Black',
+  white = 'White',
+}
 
 interface TestData {
   id: string;
@@ -83,9 +83,9 @@ const fields: BasicFormFieldDefinition<TestData>[] = [
   },
   {
     key: 'shoeColour',
-    label: "Colour of shoes",
-    enumType: Colour
-  }
+    label: 'Colour of shoes',
+    enumType: Colour,
+  },
 ];
 
 export interface TestBasicFormProps {

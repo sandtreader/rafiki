@@ -8,7 +8,7 @@ test('the model reflects to the result', () => {
   expect(root.id).toBe('');
   expect(root.name).toBe('');
   expect(root.children).not.toBeUndefined();
-  expect(root.children!.length).toBe(2);
+  expect(root.children!.length).toBe(3);
 
   const foo = root.children![0];
   expect(foo.id).toBe('foo');
@@ -41,4 +41,10 @@ test('the model reflects to the result', () => {
   expect(bar.name).toBe('BAR');
   expect(bar.icon).toBeUndefined();
   expect(bar.children).toBeUndefined();
+
+  const forms = root.children![2];
+  expect(forms.id).toBe('forms');
+  expect(forms.name).toBe('Forms');
+  expect(forms.icon).toBeUndefined();
+  expect(forms.children!.length).toBe(2);
 });

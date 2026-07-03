@@ -45,7 +45,7 @@ export interface BasicFormFieldDefinition<T> {
     field: BasicFormFieldDefinition<T>,
     value: T[keyof T],
     item: T,
-    onChange?: (value: T[keyof T]) => void // undefined = readonly
+    onChange?: (value: T[keyof T]) => void, // undefined = readonly
   ) => ReactNode;
 
   // Validation function - run on value before change accepted
@@ -67,7 +67,7 @@ export interface BasicFormFieldDefinition<T> {
 
   // Enum type - presence makes this an enum field
   // For a string enum, just pass in the enum type
-  enumType?: { [ id: string]: string };
+  enumType?: { [id: string]: string };
 }
 
 /** Basic form props, parameterised by the type we are displaying */
@@ -95,7 +95,7 @@ export default function BasicForm<T>({
   getTitle,
 }: BasicFormProps<T>) {
   const [editable, setEditable] = useState(
-    intent === FormIntent.Edit || intent === FormIntent.Create
+    intent === FormIntent.Edit || intent === FormIntent.Create,
   );
   const [itemState, setItemState] = useState<T>(clone(item));
   const [allItemsForField, setAllItemsForField] = useState<{
@@ -176,12 +176,12 @@ export default function BasicForm<T>({
   // Delete an array item in the given value
   const deleteArrayItem = (
     field: BasicFormFieldDefinition<T>,
-    arrayItem: HasUniqueId
+    arrayItem: HasUniqueId,
   ) => {
     setItemState((prevState: T) => {
       const newItem = clone(prevState);
       newItem[field.key] = (prevState[field.key] as HasUniqueId[]).filter(
-        (ai) => ai.id !== arrayItem.id
+        (ai) => ai.id !== arrayItem.id,
       );
       return newItem;
     });
@@ -190,7 +190,7 @@ export default function BasicForm<T>({
   // Add an array item
   const addArrayItem = (
     field: BasicFormFieldDefinition<T>,
-    arrayItem: HasUniqueId
+    arrayItem: HasUniqueId,
   ) => {
     setItemState((prevState: T) => {
       const newItem = clone(prevState);
@@ -236,7 +236,7 @@ export default function BasicForm<T>({
                     field,
                     value,
                     itemState,
-                    editable ? onChangeForField(field) : undefined
+                    editable ? onChangeForField(field) : undefined,
                   )}
                 </React.Fragment>
               );
@@ -278,8 +278,8 @@ export default function BasicForm<T>({
                       onChange={(e) =>
                         onChangeForField(field)(
                           allItems.find(
-                            (i) => i.id === e.target.value
-                          ) as T[keyof T]
+                            (i) => i.id === e.target.value,
+                          ) as T[keyof T],
                         )
                       }
                     >
@@ -365,19 +365,18 @@ export default function BasicForm<T>({
                     value={value}
                     label={field.label}
                     disabled={!editable}
-                    onChange={e =>
-                      onChangeForField(field)(e.target.value as T[keyof T])}
-                    >
-                      {Object.entries(field.enumType).map(([id, name]) =>
-                          <MenuItem key={id} value={name}>
-                            {name}
-                          </MenuItem>
-                        )
-                      }
-                    </Select>
-                  </FormControl>
-                )
-
+                    onChange={(e) =>
+                      onChangeForField(field)(e.target.value as T[keyof T])
+                    }
+                  >
+                    {Object.entries(field.enumType).map(([id, name]) => (
+                      <MenuItem key={id} value={name}>
+                        {name}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              );
             }
             // Default to text field
             return (

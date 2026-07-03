@@ -112,7 +112,7 @@ export default class MenuStructure {
     // Filter any children too
     if (this.children)
       this.children.forEach((child) =>
-        child.filterWithCapabilities(capabilities)
+        child.filterWithCapabilities(capabilities),
       );
 
     return true;

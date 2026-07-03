@@ -5,9 +5,7 @@ import AuthenticationProvider from './AuthenticationProvider';
 import SessionState from './SessionState';
 
 /** JWT Authentication Provider */
-export default class JWTAuthenticationProvider
-  implements AuthenticationProvider
-{
+export default class JWTAuthenticationProvider implements AuthenticationProvider {
   /** Login URL */
   private readonly url: string;
 
@@ -44,7 +42,7 @@ export default class JWTAuthenticationProvider
         } else console.error(`Login failed: ${json.error}`);
       } else
         console.error(
-          `Login failed: ${response.status} ${response.statusText}`
+          `Login failed: ${response.status} ${response.statusText}`,
         );
     } catch (e: any) {
       console.error(`Login request failed: ${e}`);
