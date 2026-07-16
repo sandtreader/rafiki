@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { ReactNode, useEffect, useState } from 'react';
 import Menu from './Menu';
 import MenuProvider from './MenuProvider';
 import MenuState from './MenuState';
@@ -25,6 +25,9 @@ type FrameworkProps = {
   menuProvider: MenuProvider;
   title: string;
   onSessionChange?: (session: SessionState) => void;
+  /** Render status content for the right of the app bar - called with the
+      current session, or undefined when not logged in */
+  headerStatus?: (session?: SessionState) => ReactNode;
 };
 
 /** Top-level framework - construct this in your <App/> */
@@ -33,6 +36,7 @@ const Framework: React.FunctionComponent<FrameworkProps> = ({
   menuProvider,
   title,
   onSessionChange,
+  headerStatus,
 }) => {
   // Session state
   const [session, setSession] = useState<SessionState>();
@@ -83,6 +87,12 @@ const Framework: React.FunctionComponent<FrameworkProps> = ({
       >
         <Toolbar>
           <Typography variant="h4">{title}</Typography>
+          {headerStatus && (
+            <>
+              <Box sx={{ flexGrow: 1 }} />
+              <Box>{headerStatus(session)}</Box>
+            </>
+          )}
         </Toolbar>
       </AppBar>
       <Toolbar />
