@@ -1,7 +1,7 @@
 // Rafiki React Filtered View component
 // Copyright (c) Paul Clark 2023
 
-import { useState, ReactNode } from 'react';
+import { useState, useEffect, useRef, ReactNode } from 'react';
 import { Box, TextField, IconButton, Alert, Icon } from '@mui/material';
 import { HasUniqueId } from './Types';
 
@@ -11,6 +11,12 @@ interface FilteredViewProps<T extends HasUniqueId> {
   searchColumns?: (keyof T)[]; // Properties to search in, or all
   onCreate?: () => void; // Optional create function
   headerExtras?: Array<ReactNode>; // Optional extra controls for header
+
+  // Server-side mode: called (debounced) when the filter text changes;
+  // client-side filtering is skipped - the caller re-fetches and passes
+  // the new items in. Not called for the initial (empty) filter on mount.
+  onFilterChange?: (filter: string) => void;
+  debounceMs?: number; // Debounce for onFilterChange (default 300)
 }
 
 /** Filtered view - offers a search filter box to filter items displayed
@@ -21,8 +27,23 @@ export default function FilteredView<T extends HasUniqueId>({
   searchColumns,
   onCreate,
   headerExtras,
+  onFilterChange,
+  debounceMs = 300,
 }: FilteredViewProps<T>) {
   const [filter, setFilter] = useState('');
+
+  // Server-side mode: debounce filter changes out to the caller, skipping
+  // the initial render so mounting never triggers a refetch
+  const mounted = useRef(false);
+  useEffect(() => {
+    if (!onFilterChange) return;
+    if (!mounted.current) {
+      mounted.current = true;
+      return;
+    }
+    const timer = setTimeout(() => onFilterChange(filter), debounceMs);
+    return () => clearTimeout(timer);
+  }, [filter]);
 
   const isNumeric = (value: any) => {
     return !isNaN(value) && value !== null && value !== '';
@@ -51,7 +72,7 @@ export default function FilteredView<T extends HasUniqueId>({
     return values.some((value) => matchesFilter(value, filter));
   };
 
-  const filteredItems = items.filter(filterItems);
+  const filteredItems = onFilterChange ? items : items.filter(filterItems);
 
   return (
     <>
