@@ -89,13 +89,17 @@ export default function FilteredView<T extends HasUniqueId>({
             value={filter}
             onChange={(e) => setFilter(e.target.value)}
           />
-          <IconButton
-            aria-label="clear search"
-            size="large"
-            onClick={() => setFilter('')}
-          >
-            <Icon fontSize="inherit">clear</Icon>
-          </IconButton>
+          {/* Only while there's text: its "clear search" aria-label would
+              otherwise shadow the search box in label queries for /search/i */}
+          {filter.length > 0 && (
+            <IconButton
+              aria-label="clear search"
+              size="large"
+              onClick={() => setFilter('')}
+            >
+              <Icon fontSize="inherit">clear</Icon>
+            </IconButton>
+          )}
         </Box>
 
         <Box>

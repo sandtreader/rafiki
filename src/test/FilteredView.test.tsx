@@ -30,6 +30,19 @@ test('client-side mode filters items live as the filter is typed', async () => {
   expect(screen.queryByText('Bob')).not.toBeInTheDocument();
 });
 
+test('clear button appears only once there is filter text', async () => {
+  render(<FilteredView items={items}>{listNames}</FilteredView>);
+
+  // Absent while empty, so label queries for /search/i hit only the box
+  expect(screen.queryByLabelText('clear search')).not.toBeInTheDocument();
+
+  await userEvent.type(screen.getByLabelText('Search'), 'ali');
+  await userEvent.click(screen.getByLabelText('clear search'));
+
+  expect(screen.queryByLabelText('clear search')).not.toBeInTheDocument();
+  expect(screen.getByText('Bob')).toBeInTheDocument();
+});
+
 test('server-side mode passes items through and debounces onFilterChange', async () => {
   const onFilterChange = vi.fn();
   render(
