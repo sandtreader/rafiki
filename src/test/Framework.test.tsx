@@ -41,3 +41,32 @@ test('it renders no extra header content when the prop is absent', () => {
   render(<Framework {...providers} title="Test App" />);
   expect(screen.getByRole('banner')).toHaveTextContent(/^Test App$/);
 });
+
+test('it passes a logOut action to headerStatus which logs out', async () => {
+  const headerStatus = (session?: SessionState, logOut?: () => void) =>
+    session?.loggedIn && (
+      <button onClick={() => logOut?.()}>Header log out</button>
+    );
+  render(
+    <Framework {...providers} title="Test App" headerStatus={headerStatus} />,
+  );
+
+  await logIn();
+  await userEvent.click(screen.getByRole('button', { name: 'Header log out' }));
+  expect(screen.getByRole('button', { name: 'Log in' })).toBeInTheDocument();
+});
+
+test('it shows the drawer Log out button by default', async () => {
+  render(<Framework {...providers} title="Test App" />);
+  await logIn();
+  await userEvent.click(screen.getByRole('button', { name: 'Log out' }));
+  expect(screen.getByRole('button', { name: 'Log in' })).toBeInTheDocument();
+});
+
+test('it hides the drawer Log out button with hideLogout', async () => {
+  render(<Framework {...providers} title="Test App" hideLogout />);
+  await logIn();
+  expect(
+    screen.queryByRole('button', { name: 'Log out' }),
+  ).not.toBeInTheDocument();
+});

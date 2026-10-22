@@ -26,8 +26,12 @@ type FrameworkProps = {
   title: string;
   onSessionChange?: (session: SessionState) => void;
   /** Render status content for the right of the app bar - called with the
-      current session, or undefined when not logged in */
-  headerStatus?: (session?: SessionState) => ReactNode;
+      current session, or undefined when not logged in, and a function to
+      log out */
+  headerStatus?: (session?: SessionState, logOut?: () => void) => ReactNode;
+  /** Hide the drawer Log out button - for apps which provide their own way
+      to log out, e.g. via headerStatus */
+  hideLogout?: boolean;
 };
 
 /** Top-level framework - construct this in your <App/> */
@@ -37,6 +41,7 @@ const Framework: React.FunctionComponent<FrameworkProps> = ({
   title,
   onSessionChange,
   headerStatus,
+  hideLogout,
 }) => {
   // Session state
   const [session, setSession] = useState<SessionState>();
@@ -90,7 +95,7 @@ const Framework: React.FunctionComponent<FrameworkProps> = ({
           {headerStatus && (
             <>
               <Box sx={{ flexGrow: 1 }} />
-              <Box>{headerStatus(session)}</Box>
+              <Box>{headerStatus(session, logOut)}</Box>
             </>
           )}
         </Toolbar>
@@ -139,25 +144,31 @@ const Framework: React.FunctionComponent<FrameworkProps> = ({
           <SessionContextProvider session={session}>
             <Stack direction="row">
               <Drawer variant="permanent" sx={{ width: 280 }}>
-                <Box sx={{ width: 280 }}>
+                <Box
+                  sx={{
+                    width: 280,
+                    height: '100%',
+                    display: 'flex',
+                    flexDirection: 'column',
+                  }}
+                >
                   <Toolbar />
-                  <Menu
-                    structure={menu}
-                    state={menuState}
-                    setState={setMenuState}
-                  />
-                  <Button
-                    variant="contained"
-                    sx={{
-                      marginLeft: 2,
-                      width: 250,
-                      position: 'absolute',
-                      bottom: 10,
-                    }}
-                    onClick={(e) => logOut()}
-                  >
-                    Log out
-                  </Button>
+                  <Box sx={{ flex: 1, overflow: 'auto' }}>
+                    <Menu
+                      structure={menu}
+                      state={menuState}
+                      setState={setMenuState}
+                    />
+                  </Box>
+                  {!hideLogout && (
+                    <Button
+                      variant="contained"
+                      sx={{ margin: 2, marginTop: 1, width: 250 }}
+                      onClick={(e) => logOut()}
+                    >
+                      Log out
+                    </Button>
+                  )}
                 </Box>
               </Drawer>
               <Container maxWidth={false}>{menuState.content}</Container>
