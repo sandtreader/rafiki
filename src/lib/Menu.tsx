@@ -79,11 +79,12 @@ const Menu: React.FunctionComponent<MenuProps> = ({
               <React.Fragment key={index}>
                 <ListItem
                   disablePadding={depth > 0}
+                  sx={depth ? undefined : { py: 0.5 }}
                   role="menuitem"
                   data-testid={`menuitem.${childId}`}
                 >
                   <ListItemButton
-                    sx={{ pl: depth * 4 }}
+                    sx={{ pl: depth * 4, py: 0.5 }}
                     title={childId} // todo: temp for testing
                     onClick={clickHandlerFn(childId, item)}
                     selected={current}
@@ -93,7 +94,9 @@ const Menu: React.FunctionComponent<MenuProps> = ({
                         <Icon>{item.icon}</Icon>
                       </ListItemIcon>
                     )}
-                    <ListItemText>{item.name}</ListItemText>
+                    <ListItemText sx={depth ? { my: 0 } : undefined}>
+                      {item.name}
+                    </ListItemText>
                     {hasChildren && (
                       <Icon>{open ? 'expand_less' : 'expand_more'}</Icon>
                     )}

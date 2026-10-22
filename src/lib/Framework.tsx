@@ -34,6 +34,9 @@ type FrameworkProps = {
   hideLogout?: boolean;
 };
 
+// App bar height - also used for the spacers below it
+const toolbarSx = { minHeight: { xs: 56, sm: 56 } };
+
 /** Top-level framework - construct this in your <App/> */
 const Framework: React.FunctionComponent<FrameworkProps> = ({
   authProvider,
@@ -90,8 +93,8 @@ const Framework: React.FunctionComponent<FrameworkProps> = ({
         position="fixed"
         sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
       >
-        <Toolbar>
-          <Typography variant="h4">{title}</Typography>
+        <Toolbar sx={toolbarSx}>
+          <Typography variant="h5">{title}</Typography>
           {headerStatus && (
             <>
               <Box sx={{ flexGrow: 1 }} />
@@ -100,7 +103,7 @@ const Framework: React.FunctionComponent<FrameworkProps> = ({
           )}
         </Toolbar>
       </AppBar>
-      <Toolbar />
+      <Toolbar sx={toolbarSx} />
       {
         // Login screen
         !session?.loggedIn && (
@@ -152,8 +155,8 @@ const Framework: React.FunctionComponent<FrameworkProps> = ({
                     flexDirection: 'column',
                   }}
                 >
-                  <Toolbar />
-                  <Box sx={{ flex: 1, overflow: 'auto' }}>
+                  <Toolbar sx={toolbarSx} />
+                  <Box sx={{ flex: 1, overflow: 'auto', pt: 1.5 }}>
                     <Menu
                       structure={menu}
                       state={menuState}
